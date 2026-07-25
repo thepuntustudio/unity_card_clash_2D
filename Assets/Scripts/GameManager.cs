@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     public Button mainMenuBtn;
     public Button surrenderBtn;
 
+    public GameObject goblin;
+    public GameObject orc;
+    public GameObject troll;
     public List<EnemyData> enemies;
     private int currentEnemyIndex = 0;
     private CardData currentAttackCard;
@@ -81,6 +84,7 @@ public class GameManager : MonoBehaviour
         loopCount = 0;
         endlessMode = false;
         LoadEnemy(enemies[currentEnemyIndex]);
+        UpdateEnemyObjects();
         playerShield = 0;
         gameOver = false;
         isPlayerTurn = true;
@@ -195,6 +199,7 @@ public class GameManager : MonoBehaviour
         }
 
         LoadEnemy(enemies[currentEnemyIndex]);
+        UpdateEnemyObjects();
         if (endlessMode)
         {
             enemyMaxHP += loopCount * 5;
@@ -227,6 +232,7 @@ public void OnContinueForHighScore()
     loopCount++;
     currentEnemyIndex = 0;
     LoadEnemy(enemies[currentEnemyIndex]);
+    UpdateEnemyObjects();
     enemyMaxHP += loopCount * 5;
     enemyHP = enemyMaxHP;
     enemyAttack += loopCount * 1;
@@ -361,8 +367,14 @@ public void OnEndGameChoice()
     {
         // TODO: once a Main Menu scene exists, replace this with:
         SceneManager.LoadScene("MainMenu");
-        // messageText.text = "Main Menu coming soon — restarting instead.";
-        StartGame();
+        
+    }
+
+    void UpdateEnemyObjects()
+    {
+        if (goblin != null) goblin.SetActive(currentEnemyIndex == 0);
+        if (orc != null) orc.SetActive(currentEnemyIndex == 1);
+        if (troll != null) troll.SetActive(currentEnemyIndex == 2);
     }
 
 }
