@@ -6,5 +6,7 @@ public class EnemyData : ScriptableObject
     public string enemyName;
     public int maxHP;
     public int attackDamage;
-    [TextArea] public string introLine; // handy later for Phase 6
+    public Sprite enemySprite;
+    public Vector2 displaySize = new Vector2(400f, 400f); // width/height in UI units — this replaces manually resizing 3 separate GameObjects
+    [TextArea] public string introLine;
 }

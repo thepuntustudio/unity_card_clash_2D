@@ -21,9 +21,12 @@ public class GameManager : MonoBehaviour
     public Button mainMenuBtn;
     public Button surrenderBtn;
 
-    public GameObject goblin;
-    public GameObject orc;
-    public GameObject troll;
+    // public GameObject goblin;
+    // public GameObject orc;
+    // public GameObject troll;
+
+    public Image enemyCharacterImage; // drag your single consolidated Image here
+
     public List<EnemyData> enemies;
     private int currentEnemyIndex = 0;
     private CardData currentAttackCard;
@@ -84,10 +87,12 @@ public class GameManager : MonoBehaviour
         loopCount = 0;
         endlessMode = false;
         LoadEnemy(enemies[currentEnemyIndex]);
-        UpdateEnemyObjects();
+        messageText.text = $"A {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
+        // UpdateEnemyObjects();
         playerShield = 0;
         gameOver = false;
         isPlayerTurn = true;
+        
 
         RollAttackCard();
         UpdateUI();
@@ -170,14 +175,17 @@ public class GameManager : MonoBehaviour
         isPlayerTurn = false;
         StartCoroutine(EnemyTurn());
     }
-        void LoadEnemy(EnemyData data)
-    {
-        enemyMaxHP = data.maxHP;
-        enemyHP = data.maxHP;
-        enemyAttack = data.attackDamage;
-        currentEnemyName = data.enemyName;
-        enemyNameText.text = data.enemyName;
-    }
+    void LoadEnemy(EnemyData data)
+        {
+            enemyMaxHP = data.maxHP;
+            enemyHP = data.maxHP;
+            enemyAttack = data.attackDamage;
+            currentEnemyName = data.enemyName;
+            enemyNameText.text = data.enemyName;
+
+            enemyCharacterImage.sprite = data.enemySprite;
+            enemyCharacterImage.rectTransform.sizeDelta = data.displaySize;
+        }
 
     IEnumerator NextEnemyRoutine()
     {
@@ -199,7 +207,7 @@ public class GameManager : MonoBehaviour
         }
 
         LoadEnemy(enemies[currentEnemyIndex]);
-        UpdateEnemyObjects();
+        // UpdateEnemyObjects();
         if (endlessMode)
         {
             enemyMaxHP += loopCount * 5;
@@ -209,7 +217,7 @@ public class GameManager : MonoBehaviour
 
         UpdateUI();
         RollAttackCard();
-        messageText.text = $"A {currentEnemyName} appears!";
+        messageText.text = $"A {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
         if (scoreText != null) scoreText.text = $"Wins: {winCount}";
         attackBtn.interactable = true;
         blockBtn.interactable = true;
@@ -232,13 +240,13 @@ public void OnContinueForHighScore()
     loopCount++;
     currentEnemyIndex = 0;
     LoadEnemy(enemies[currentEnemyIndex]);
-    UpdateEnemyObjects();
+    // UpdateEnemyObjects();
     enemyMaxHP += loopCount * 5;
     enemyHP = enemyMaxHP;
     enemyAttack += loopCount * 1;
     UpdateUI();
     RollAttackCard();
-    messageText.text = $"A stronger {currentEnemyName} appears!";
+    messageText.text = $"A stronger {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
     if (scoreText != null) scoreText.text = $"Wins: {winCount}";
     attackBtn.interactable = true;
     blockBtn.interactable = true;
@@ -370,12 +378,12 @@ public void OnEndGameChoice()
         
     }
 
-    void UpdateEnemyObjects()
-    {
-        if (goblin != null) goblin.SetActive(currentEnemyIndex == 0);
-        if (orc != null) orc.SetActive(currentEnemyIndex == 1);
-        if (troll != null) troll.SetActive(currentEnemyIndex == 2);
-    }
+    // void UpdateEnemyObjects()
+    // {
+    //     if (goblin != null) goblin.SetActive(currentEnemyIndex == 0);
+    //     if (orc != null) orc.SetActive(currentEnemyIndex == 1);
+    //     if (troll != null) troll.SetActive(currentEnemyIndex == 2);
+    // }
 
 }
 
