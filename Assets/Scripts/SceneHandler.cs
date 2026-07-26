@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneLoader : MonoBehaviour
+public class SceneHandler : MonoBehaviour
 {
+    public AudioSource sfxSource;   
+     
     // Load a scene by its build index
     public void LoadSceneByIndex(int sceneIndex)
     {

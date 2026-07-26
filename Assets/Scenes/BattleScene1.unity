@@ -568,7 +568,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &222600648
 RectTransform:
   m_ObjectHideFlags: 0
@@ -715,6 +715,7 @@ GameObject:
   - component: {fileID: 350371628}
   - component: {fileID: 350371627}
   - component: {fileID: 350371629}
+  - component: {fileID: 350371630}
   m_Layer: 5
   m_Name: EndButton
   m_TagString: Untagged
@@ -836,6 +837,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &350371630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350371625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3dd9a88bbd34304ae993682e563310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSFX
+  hoverClip: {fileID: 8300000, guid: 8561fae9c533848a2aa7d13ec83aae7f, type: 3}
+  clickClip: {fileID: 8300000, guid: 59365535e6daa422caad1b27b478cc03, type: 3}
 --- !u!1 &361561277
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,6 +1202,7 @@ GameObject:
   - component: {fileID: 364752949}
   - component: {fileID: 364752948}
   - component: {fileID: 364752947}
+  - component: {fileID: 364752951}
   m_Layer: 5
   m_Name: RestartButton
   m_TagString: Untagged
@@ -1216,7 +1232,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.16820934, g: 0.47058824, b: 0.78431374, a: 0.78431374}
+    m_HighlightedColor: {r: 0.2784314, g: 0.49803922, b: 0.90588236, a: 0.78431374}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -1308,6 +1324,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 328}
   m_SizeDelta: {x: 746.4568, y: 262.5493}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &364752951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364752946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3dd9a88bbd34304ae993682e563310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSFX
+  hoverClip: {fileID: 8300000, guid: 8561fae9c533848a2aa7d13ec83aae7f, type: 3}
+  clickClip: {fileID: 8300000, guid: 59365535e6daa422caad1b27b478cc03, type: 3}
 --- !u!1 &367146372
 GameObject:
   m_ObjectHideFlags: 0
@@ -2121,7 +2151,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 120
-    m_Alignment: 1
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -2459,6 +2489,7 @@ GameObject:
   - component: {fileID: 975153085}
   - component: {fileID: 975153084}
   - component: {fileID: 975153086}
+  - component: {fileID: 975153087}
   m_Layer: 5
   m_Name: ContinueButton
   m_TagString: Untagged
@@ -2580,6 +2611,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &975153087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975153082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3dd9a88bbd34304ae993682e563310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSFX
+  hoverClip: {fileID: 8300000, guid: 8561fae9c533848a2aa7d13ec83aae7f, type: 3}
+  clickClip: {fileID: 8300000, guid: 59365535e6daa422caad1b27b478cc03, type: 3}
 --- !u!1 &1010414246
 GameObject:
   m_ObjectHideFlags: 0
@@ -3982,6 +4027,7 @@ GameObject:
   - component: {fileID: 1582068138}
   - component: {fileID: 1582068137}
   - component: {fileID: 1582068139}
+  - component: {fileID: 1582068140}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -4103,6 +4149,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1582068140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582068135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3dd9a88bbd34304ae993682e563310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSFX
+  hoverClip: {fileID: 8300000, guid: 8561fae9c533848a2aa7d13ec83aae7f, type: 3}
+  clickClip: {fileID: 8300000, guid: 59365535e6daa422caad1b27b478cc03, type: 3}
 --- !u!1 &1582671988
 GameObject:
   m_ObjectHideFlags: 0
@@ -4794,6 +4854,8 @@ MonoBehaviour:
   victorySFX: {fileID: 8300000, guid: d03a0b3bc858d456a9c386915e2a7df1, type: 3}
   defeatSFX: {fileID: 8300000, guid: 41502a717209145f5abf8df1b9d42f0c, type: 3}
   powerStrikeSFX: {fileID: 8300000, guid: d2af4a28a729640ad8f5765f76ab345f, type: 3}
+  enemyAppearSFX: {fileID: 8300000, guid: 2c2e5a27622034095bddc1210315f141, type: 3}
+  enemyDeathSFX: {fileID: 8300000, guid: 763abf20732fb476cb53763a193ad4f3, type: 3}
 --- !u!4 &1763609841
 Transform:
   m_ObjectHideFlags: 0
@@ -5090,6 +5152,7 @@ GameObject:
   - component: {fileID: 1812943903}
   - component: {fileID: 1812943902}
   - component: {fileID: 1812943901}
+  - component: {fileID: 1812943904}
   m_Layer: 5
   m_Name: SurrenderButton
   m_TagString: Untagged
@@ -5211,6 +5274,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812943899}
   m_CullTransparentMesh: 1
+--- !u!114 &1812943904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812943899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3dd9a88bbd34304ae993682e563310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSFX
+  hoverClip: {fileID: 8300000, guid: 8561fae9c533848a2aa7d13ec83aae7f, type: 3}
+  clickClip: {fileID: 8300000, guid: 59365535e6daa422caad1b27b478cc03, type: 3}
 --- !u!1 &1815411505
 GameObject:
   m_ObjectHideFlags: 0

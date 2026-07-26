@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private int highScore = 0;
+    public int maxHealsPerFight = 2;
+    private int healsRemaining;
     
     public CardData attackCard;
     public CardData powerStrikeCard;
@@ -64,6 +66,11 @@ public class GameManager : MonoBehaviour
     public AudioClip victorySFX;
     public AudioClip defeatSFX;
     public AudioClip powerStrikeSFX;
+    
+    //fallback SFX for enemies, in case they don't have their own
+    public AudioClip enemyAppearSFX;
+    public AudioClip enemyDeathSFX;
+
 
     // Game state
     private int playerMaxHP = 100;
@@ -95,6 +102,7 @@ public class GameManager : MonoBehaviour
         winCount = 0;
         loopCount = 0;
         endlessMode = false;
+        healsRemaining = maxHealsPerFight;
         LoadEnemy(enemies[currentEnemyIndex]);
         // UpdateEnemyObjects();
         playerShield = 0;
@@ -133,10 +141,15 @@ public class GameManager : MonoBehaviour
     }
 
     public void PlayerHeal()
+{
+    if (!isPlayerTurn || gameOver) return;
+    if (healsRemaining <= 0)
     {
-        if (!isPlayerTurn || gameOver) return;
-        PerformPlayerAction("heal");
+        messageText.text = "No heals remaining this fight!";
+        return;
     }
+    PerformPlayerAction("heal");
+}
 
     void PlaySFX(AudioClip clip)
         {
@@ -167,10 +180,10 @@ public class GameManager : MonoBehaviour
         }
         else if (action == "heal")
         {
+            healsRemaining--;
             playerHP += healCard.value;
-            PlaySFX(healSFX);
             if (playerHP > playerMaxHP) playerHP = playerMaxHP;
-            messageText.text = $"You healed {healCard.value} HP!";
+            messageText.text = $"You healed {healCard.value} HP! ({healsRemaining} heals left)";
             SpawnFloatingText(playerTextSpawn, $"+{healCard.value}", Color.green);
             StartCoroutine(FlashPanel(playerPanelImage, Color.green));
         }
@@ -182,7 +195,7 @@ public class GameManager : MonoBehaviour
         {
             enemyHP = 0;
             UpdateUI();
-            StartCoroutine(NextEnemyRoutine());   
+            StartCoroutine(NextEnemyRoutine(enemies[currentEnemyIndex]));   
             return;
         }
 
@@ -191,22 +204,26 @@ public class GameManager : MonoBehaviour
         StartCoroutine(EnemyTurn());
     }
     void LoadEnemy(EnemyData data)
-        {
-            enemyMaxHP = data.maxHP;
-            enemyHP = data.maxHP;
-            enemyAttack = data.attackDamage;
-            currentEnemyName = data.enemyName;
-            enemyNameText.text = data.enemyName;
-
-            enemyCharacterImage.sprite = data.enemySprite;
-            enemyCharacterImage.rectTransform.sizeDelta = data.displaySize;
-        }
-
-    IEnumerator NextEnemyRoutine()
     {
-        messageText.text = $"🎉 {currentEnemyName} defeated!";
+        enemyMaxHP = data.maxHP;
+        enemyHP = data.maxHP;
+        enemyAttack = data.attackDamage;
+        currentEnemyName = data.enemyName;
+        enemyNameText.text = data.enemyName;
+
+        enemyCharacterImage.sprite = data.enemySprite;
+        enemyCharacterImage.rectTransform.sizeDelta = data.displaySize;
+
+        //play enemy appear SFX, using the enemy's own if available, otherwise fallback to default
+       PlaySFX(data.appearSFX != null ? data.appearSFX : enemyAppearSFX);
+    }
+
+    IEnumerator NextEnemyRoutine(EnemyData data)
+    {
+        messageText.text = $"{currentEnemyName} defeated!";
         winCount++;
         UpdateScoreDisplay();   // <- update immediately, before any branching
+        PlaySFX(data.deathSFX != null ? data.deathSFX : enemyDeathSFX);
         yield return new WaitForSeconds(1.5f);
 
         currentEnemyIndex++;
@@ -231,6 +248,7 @@ public class GameManager : MonoBehaviour
             enemyAttack += loopCount * 1;
         }
 
+        healsRemaining = maxHealsPerFight;
         UpdateUI();
         RollAttackCard();
         messageText.text = $"A {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
@@ -257,6 +275,7 @@ public void OnContinueForHighScore()
     loopCount++;
     currentEnemyIndex = 0;
     LoadEnemy(enemies[currentEnemyIndex]);
+    healsRemaining = maxHealsPerFight;
     enemyMaxHP += loopCount * 5;
     enemyHP = enemyMaxHP;
     enemyAttack += loopCount * 1;
