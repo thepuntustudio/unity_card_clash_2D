@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
+    private int highScore = 0;
     
     public CardData attackCard;
     public CardData powerStrikeCard;
@@ -21,10 +21,6 @@ public class GameManager : MonoBehaviour
     public Button mainMenuBtn;
     public Button surrenderBtn;
 
-    // public GameObject goblin;
-    // public GameObject orc;
-    // public GameObject troll;
-
     public Image enemyCharacterImage; // drag your single consolidated Image here
 
     public List<EnemyData> enemies;
@@ -32,6 +28,8 @@ public class GameManager : MonoBehaviour
     private CardData currentAttackCard;
     public Text enemyNameText; // drag EnemyName object here in Inspector
 
+    public GameObject defeatPanel;
+    public TMP_Text defeatText;
     public GameObject victoryPanel;
     public TMP_Text victoryText;
     public TMP_Text scoreText; // optional, can leave unassigned if skipping
@@ -57,6 +55,16 @@ public class GameManager : MonoBehaviour
     public Transform enemyTextSpawn;  // e.g. EnemyHealthBar position
 
 
+    public AudioSource sfxSource; // drag the new AudioSource here
+    public AudioClip attackSFX;
+    public AudioClip enemyAttackSFX;
+    public AudioClip healSFX;
+    public AudioClip blockSFX;
+    public AudioClip blockedImpactSFX; // plays when an enemy attack is actually absorbed by shield
+    public AudioClip victorySFX;
+    public AudioClip defeatSFX;
+    public AudioClip powerStrikeSFX;
+
     // Game state
     private int playerMaxHP = 100;
     private int playerHP;
@@ -75,6 +83,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
         StartGame();
 
     }
@@ -87,22 +96,20 @@ public class GameManager : MonoBehaviour
         loopCount = 0;
         endlessMode = false;
         LoadEnemy(enemies[currentEnemyIndex]);
-        messageText.text = $"A {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
         // UpdateEnemyObjects();
         playerShield = 0;
         gameOver = false;
         isPlayerTurn = true;
         
-
         RollAttackCard();
         UpdateUI();
-        messageText.text = "⚔️ Choose your action!";
+        messageText.text = $"A {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
+        // messageText.text = "Choose your action!";
 
         attackBtn.interactable = true;
         blockBtn.interactable = true;
         healBtn.interactable = true;
-        restartBtn.gameObject.SetActive(false);
-        mainMenuBtn.gameObject.SetActive(false);
+        defeatPanel.SetActive(false);
         surrenderBtn.gameObject.SetActive(true);
         victoryPanel.SetActive(false);
     }
@@ -131,6 +138,11 @@ public class GameManager : MonoBehaviour
         PerformPlayerAction("heal");
     }
 
+    void PlaySFX(AudioClip clip)
+        {
+            if (clip != null) sfxSource.PlayOneShot(clip);
+        }
+
     void PerformPlayerAction(string action)
     {
         attackBtn.interactable = false;
@@ -142,20 +154,23 @@ public class GameManager : MonoBehaviour
             int dmg = currentAttackCard.value;
             enemyHP -= dmg;
             if (enemyHP < 0) enemyHP = 0;
-            messageText.text = $"⚔️ {currentAttackCard.cardName} dealt {dmg} damage!";
+            messageText.text = $"{currentAttackCard.cardName} dealt {dmg} damage!";
             SpawnFloatingText(enemyTextSpawn, $"-{dmg}", Color.red);
             StartCoroutine(FlashPanel(enemyPanelImage, Color.white));
+            PlaySFX(currentAttackCard == powerStrikeCard ? powerStrikeSFX : attackSFX);
         }
         else if (action == "block")
         {
             playerShield = blockCard.value;
-            messageText.text = "🛡️ You raise your shield!";
+            PlaySFX(blockSFX);
+            messageText.text = "You raise your shield!";
         }
         else if (action == "heal")
         {
             playerHP += healCard.value;
+            PlaySFX(healSFX);
             if (playerHP > playerMaxHP) playerHP = playerMaxHP;
-            messageText.text = $"❤️ You healed {healCard.value} HP!";
+            messageText.text = $"You healed {healCard.value} HP!";
             SpawnFloatingText(playerTextSpawn, $"+{healCard.value}", Color.green);
             StartCoroutine(FlashPanel(playerPanelImage, Color.green));
         }
@@ -191,6 +206,7 @@ public class GameManager : MonoBehaviour
     {
         messageText.text = $"🎉 {currentEnemyName} defeated!";
         winCount++;
+        UpdateScoreDisplay();   // <- update immediately, before any branching
         yield return new WaitForSeconds(1.5f);
 
         currentEnemyIndex++;
@@ -199,6 +215,7 @@ public class GameManager : MonoBehaviour
         {
             if (!endlessMode)
             {
+                CheckHighScore();
                 ShowVictoryPanel();
                 yield break;
             }
@@ -207,7 +224,6 @@ public class GameManager : MonoBehaviour
         }
 
         LoadEnemy(enemies[currentEnemyIndex]);
-        // UpdateEnemyObjects();
         if (endlessMode)
         {
             enemyMaxHP += loopCount * 5;
@@ -218,18 +234,19 @@ public class GameManager : MonoBehaviour
         UpdateUI();
         RollAttackCard();
         messageText.text = $"A {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
-        if (scoreText != null) scoreText.text = $"Wins: {winCount}";
         attackBtn.interactable = true;
         blockBtn.interactable = true;
         healBtn.interactable = true;
         isPlayerTurn = true;
     }
 
-    void ShowVictoryPanel()
+
+   void ShowVictoryPanel()
     {
         isPlayerTurn = false;
-        victoryText.text = "You have saved the kingdom from the beast horde!\n\nRumors speak of darker foes beyond the border...";
+        victoryText.text = $"You have saved the kingdom from the beast horde!\n\nWins: {winCount} (Best: {highScore})\n\nRumors speak of darker foes beyond the border...";
         victoryPanel.SetActive(true);
+        PlaySFX(victorySFX);
     }
 
 // Hook to ContinueButton's OnClick in Inspector
@@ -240,14 +257,13 @@ public void OnContinueForHighScore()
     loopCount++;
     currentEnemyIndex = 0;
     LoadEnemy(enemies[currentEnemyIndex]);
-    // UpdateEnemyObjects();
     enemyMaxHP += loopCount * 5;
     enemyHP = enemyMaxHP;
     enemyAttack += loopCount * 1;
     UpdateUI();
     RollAttackCard();
     messageText.text = $"A stronger {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
-    if (scoreText != null) scoreText.text = $"Wins: {winCount}";
+    if (scoreText != null) scoreText.text = $"Wins: {winCount} (Best: {highScore})";
     attackBtn.interactable = true;
     blockBtn.interactable = true;
     healBtn.interactable = true;
@@ -258,28 +274,28 @@ public void OnContinueForHighScore()
 public void OnEndGameChoice()
 {
     victoryPanel.SetActive(false);
-    messageText.text = $"🏆 Thanks for playing! Final wins: {winCount}. Press Restart to play again.";
-    EndGame(true);
+    EndGame(true, $"🏆 Thanks for playing! Final wins: {winCount} (Best: {highScore})");
 }
 
     IEnumerator EnemyTurn()
     {
         yield return new WaitForSeconds(1.0f); // let player read their own action first
 
-        messageText.text = "👹 Enemy is preparing to attack...";
+        messageText.text = "Enemy is preparing to attack...";
         yield return new WaitForSeconds(1.0f);
 
         int damage = enemyAttack - playerShield;
         
         SpawnFloatingText(playerTextSpawn, damage > 0 ? $"-{damage}" : "Blocked!", damage > 0 ? Color.red : Color.cyan);
         StartCoroutine(FlashPanel(playerPanelImage, Color.white));
+        PlaySFX(damage > 0 ? enemyAttackSFX : blockedImpactSFX); // see #2 below for blockedImpactSFX
 
         if (damage < 0) damage = 0;
         playerHP -= damage;
         if (playerHP < 0) playerHP = 0;
         playerShield = 0;
 
-        messageText.text = damage > 0 ? $"💢 Enemy attacks for {damage} damage!" : "🛡️ Shield blocked the attack!";
+        messageText.text = damage > 0 ? $"Enemy attacks for {damage} damage!" : "🛡️ Shield blocked the attack!";
         UpdateUI();
 
         yield return new WaitForSeconds(1.2f);
@@ -288,14 +304,13 @@ public void OnEndGameChoice()
         {
             playerHP = 0;
             UpdateUI();
-            messageText.text = "💀 GAME OVER! Press Restart to try again.";
-            EndGame(false);
+            EndGame(false, $"GAME OVER! You have fallen in battle.\nFinal Score: {winCount} wins (Best: {highScore})");
             yield break;
         }
 
         isPlayerTurn = true;   
         RollAttackCard();
-        messageText.text = "⚔️ Your turn! Choose an action.";
+        messageText.text = "Your turn! Choose an action.";
         attackBtn.interactable = true;
         blockBtn.interactable = true;
         healBtn.interactable = true;
@@ -327,11 +342,14 @@ public void OnEndGameChoice()
         bar.value = target;
     }
 
-    void EndGame(bool won)
+    void EndGame(bool won, string message)
     {
         gameOver = true;
         isPlayerTurn = false;
-        StopAllCoroutines(); // stop any pending enemy-turn/tween so nothing fires after the game ends
+        StopAllCoroutines();
+        CheckHighScore();
+
+        if (!won) PlaySFX(defeatSFX);
 
         attackBtn.interactable = false;
         blockBtn.interactable = false;
@@ -339,8 +357,8 @@ public void OnEndGameChoice()
         surrenderBtn.gameObject.SetActive(false);
 
         restartButtonLabel.text = won ? "Play Again" : "Try Again";
-        restartBtn.gameObject.SetActive(true);
-        mainMenuBtn.gameObject.SetActive(true);
+        defeatText.text = message;
+        defeatPanel.SetActive(true);
     }
 
     // Called by Restart button
@@ -367,8 +385,7 @@ public void OnEndGameChoice()
     public void OnSurrender()
     {
         if (gameOver) return;
-        messageText.text = "🏳️ You surrendered.";
-        EndGame(false);
+        EndGame(false, $"You surrendered.\nFinal Score: {winCount} wins (Best: {highScore})");
     }
 
     public void OnMainMenu()
@@ -378,12 +395,20 @@ public void OnEndGameChoice()
         
     }
 
-    // void UpdateEnemyObjects()
-    // {
-    //     if (goblin != null) goblin.SetActive(currentEnemyIndex == 0);
-    //     if (orc != null) orc.SetActive(currentEnemyIndex == 1);
-    //     if (troll != null) troll.SetActive(currentEnemyIndex == 2);
-    // }
+    void UpdateScoreDisplay()
+    {
+        if (scoreText != null) scoreText.text = $"Wins: {winCount} (Best: {highScore})";
+    }
+
+    void CheckHighScore()
+    {
+        if (winCount > highScore)
+        {
+            highScore = winCount;
+            PlayerPrefs.SetInt("HighScore", highScore);
+            PlayerPrefs.Save();
+        }
+    }
 
 }
 
