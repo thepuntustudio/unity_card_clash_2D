@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour
     private int highScore = 0;
     public int maxHealsPerFight = 2;
     private int healsRemaining;
+    [Range(0f, 1f)] public float potionDropChance = 0.25f;
+    public int potionHealAmount = 10;
+    private int potionCount = 0;
+    public TMP_Text potionCountText; // small label near the Heal card, e.g. "Potions: 0"
     
     public CardData attackCard;
     public CardData powerStrikeCard;
@@ -37,6 +41,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text scoreText; // optional, can leave unassigned if skipping
     public Button continueButton;
     public Button endButton;
+
+    public Button potionBtn; // new small button, separate from the 3 main cards
 
     // References
     public Slider playerHealthBar;
@@ -108,6 +114,8 @@ public class GameManager : MonoBehaviour
         playerShield = 0;
         gameOver = false;
         isPlayerTurn = true;
+        potionCount = 0;
+        UpdatePotionDisplay();
         
         RollAttackCard();
         UpdateUI();
@@ -167,10 +175,19 @@ public class GameManager : MonoBehaviour
             int dmg = currentAttackCard.value;
             enemyHP -= dmg;
             if (enemyHP < 0) enemyHP = 0;
-            messageText.text = $"{currentAttackCard.cardName} dealt {dmg} damage!";
+            messageText.text = $"⚔️ {currentAttackCard.cardName} dealt {dmg} damage!";
             SpawnFloatingText(enemyTextSpawn, $"-{dmg}", Color.red);
             StartCoroutine(FlashPanel(enemyPanelImage, Color.white));
             PlaySFX(currentAttackCard == powerStrikeCard ? powerStrikeSFX : attackSFX);
+
+            if (UnityEngine.Random.value < potionDropChance)
+            {
+                potionCount++;
+                UpdatePotionDisplay();
+                SpawnFloatingText(playerTextSpawn, "+1 Potion!", Color.cyan);
+            }
+
+            RollAttackCard(); // roll the NEXT attack card only now that this one was spent
         }
         else if (action == "block")
         {
@@ -186,6 +203,16 @@ public class GameManager : MonoBehaviour
             messageText.text = $"You healed {healCard.value} HP! ({healsRemaining} heals left)";
             SpawnFloatingText(playerTextSpawn, $"+{healCard.value}", Color.green);
             StartCoroutine(FlashPanel(playerPanelImage, Color.green));
+            PlaySFX(healSFX);
+        }
+        else if (action == "potion")
+        {
+            playerHP += potionHealAmount;
+            if (playerHP > playerMaxHP) playerHP = playerMaxHP;
+            messageText.text = $"Potion restored {potionHealAmount} HP!";
+            SpawnFloatingText(playerTextSpawn, $"+{potionHealAmount}", Color.cyan);
+            StartCoroutine(FlashPanel(playerPanelImage, Color.cyan));
+            PlaySFX(healSFX); // reuse for now, distinct clip later
         }
 
         UpdateUI();
@@ -250,7 +277,6 @@ public class GameManager : MonoBehaviour
 
         healsRemaining = maxHealsPerFight;
         UpdateUI();
-        RollAttackCard();
         messageText.text = $"A {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
         attackBtn.interactable = true;
         blockBtn.interactable = true;
@@ -280,7 +306,6 @@ public void OnContinueForHighScore()
     enemyHP = enemyMaxHP;
     enemyAttack += loopCount * 1;
     UpdateUI();
-    RollAttackCard();
     messageText.text = $"A stronger {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
     if (scoreText != null) scoreText.text = $"Wins: {winCount} (Best: {highScore})";
     attackBtn.interactable = true;
@@ -328,7 +353,6 @@ public void OnEndGameChoice()
         }
 
         isPlayerTurn = true;   
-        RollAttackCard();
         messageText.text = "Your turn! Choose an action.";
         attackBtn.interactable = true;
         blockBtn.interactable = true;
@@ -344,6 +368,11 @@ public void OnEndGameChoice()
 
         StartCoroutine(SmoothBar(playerHealthBar, playerHP));
         StartCoroutine(SmoothBar(enemyHealthBar, enemyHP));
+    }
+
+    void UpdatePotionDisplay()
+    {
+        if (potionCountText != null) potionCountText.text = $"Potions: {potionCount}";
     }
 
     IEnumerator SmoothBar(Slider bar, float target)
@@ -378,6 +407,18 @@ public void OnEndGameChoice()
         restartButtonLabel.text = won ? "Play Again" : "Try Again";
         defeatText.text = message;
         defeatPanel.SetActive(true);
+    }
+    public void UsePotion()
+    {
+        if (!isPlayerTurn || gameOver) return;
+        if (potionCount <= 0)
+        {
+            messageText.text = "No potions available!";
+            return;
+        }
+        potionCount--;
+        UpdatePotionDisplay();
+        PerformPlayerAction("potion");
     }
 
     // Called by Restart button
