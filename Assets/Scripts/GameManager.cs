@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     private int currentEnemyIndex = 0;
     private CardData currentAttackCard;
     public Text enemyNameText; // drag EnemyName object here in Inspector
+    private bool currentEnemyIsBoss = false;
+    private bool inBossFight = false;
+    public List<EnemyData> bosses;
 
     public GameObject defeatPanel;
     public TMP_Text defeatText;
@@ -62,7 +65,7 @@ public class GameManager : MonoBehaviour
     public Transform playerTextSpawn; // e.g. PlayerHealthBar position
     public Transform enemyTextSpawn;  // e.g. EnemyHealthBar position
 
-
+// Audio sfx
     public AudioSource sfxSource; // drag the new AudioSource here
     public AudioClip attackSFX;
     public AudioClip enemyAttackSFX;
@@ -76,6 +79,12 @@ public class GameManager : MonoBehaviour
     //fallback SFX for enemies, in case they don't have their own
     public AudioClip enemyAppearSFX;
     public AudioClip enemyDeathSFX;
+
+    //telegraphing eneny attacks
+    [Range(0f, 1f)] public float telegraphChance = 0.25f;
+    public float telegraphDamageMultiplier = 1.8f;
+    private bool isTelegraphing = false;
+    public AudioClip telegraphSFX;
 
 
     // Game state
@@ -128,6 +137,7 @@ public class GameManager : MonoBehaviour
         defeatPanel.SetActive(false);
         surrenderBtn.gameObject.SetActive(true);
         victoryPanel.SetActive(false);
+        if (scoreText != null) scoreText.gameObject.SetActive(true);
     }
 
     void RollAttackCard()
@@ -222,7 +232,7 @@ public class GameManager : MonoBehaviour
         {
             enemyHP = 0;
             UpdateUI();
-            StartCoroutine(NextEnemyRoutine(enemies[currentEnemyIndex]));   
+            StartCoroutine(NextEnemyRoutine(enemies[currentEnemyIndex])); // pass the enemy that was just defeated
             return;
         }
 
@@ -235,8 +245,8 @@ public class GameManager : MonoBehaviour
         enemyMaxHP = data.maxHP;
         enemyHP = data.maxHP;
         enemyAttack = data.attackDamage;
-        currentEnemyName = data.enemyName;
-        enemyNameText.text = data.enemyName;
+        currentEnemyIsBoss = data.isBoss;
+        enemyNameText.text = data.isBoss ? $"{data.enemyName}" : data.enemyName;
 
         enemyCharacterImage.sprite = data.enemySprite;
         enemyCharacterImage.rectTransform.sizeDelta = data.displaySize;
@@ -247,9 +257,18 @@ public class GameManager : MonoBehaviour
 
     IEnumerator NextEnemyRoutine(EnemyData data)
     {
-        messageText.text = $"{currentEnemyName} defeated!";
         winCount++;
-        UpdateScoreDisplay();   // <- update immediately, before any branching
+        if (currentEnemyIsBoss)
+        {
+            potionCount++;
+            UpdatePotionDisplay();
+            messageText.text = $"{currentEnemyName} defeated! Bonus potion earned!";
+        }
+        else
+        {
+            messageText.text = $"{currentEnemyName} defeated!";
+        }
+        UpdateScoreDisplay();
         PlaySFX(data.deathSFX != null ? data.deathSFX : enemyDeathSFX);
         yield return new WaitForSeconds(1.5f);
 
@@ -257,27 +276,47 @@ public class GameManager : MonoBehaviour
 
         if (currentEnemyIndex >= enemies.Count)
         {
-            if (!endlessMode)
+            currentEnemyIndex = 0;
+
+            if (!inBossFight)
             {
-                CheckHighScore();
-                ShowVictoryPanel();
+                // Lap of 3 regular enemies complete — face this lap's boss
+                inBossFight = true;
+                EnemyData boss = bosses[loopCount % bosses.Count];
+                LoadEnemy(boss);
+                currentEnemyIsBoss = true;
+                isTelegraphing = false;
+                healsRemaining = maxHealsPerFight;
+                UpdateUI();
+                messageText.text = $"A {currentEnemyName} appears! {boss.introLine}";
+                attackBtn.interactable = true;
+                blockBtn.interactable = true;
+                healBtn.interactable = true;
+                isPlayerTurn = true;
                 yield break;
             }
-            currentEnemyIndex = 0;
-            loopCount++;
+            else
+            {
+                // Boss just defeated
+                inBossFight = false;
+                currentEnemyIsBoss = false;
+
+                if (!endlessMode)
+                {
+                    CheckHighScore();
+                    ShowVictoryPanel();
+                    yield break;
+                }
+                loopCount++;
+            }
         }
 
-        LoadEnemy(enemies[currentEnemyIndex]);
-        if (endlessMode)
-        {
-            enemyMaxHP += loopCount * 5;
-            enemyHP = enemyMaxHP;
-            enemyAttack += loopCount * 1;
-        }
-
+        EnemyData nextEnemy = enemies[currentEnemyIndex];
+        LoadEnemy(nextEnemy);
+        isTelegraphing = false;
         healsRemaining = maxHealsPerFight;
         UpdateUI();
-        messageText.text = $"A {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
+        messageText.text = $"A {currentEnemyName} appears! {nextEnemy.introLine}";
         attackBtn.interactable = true;
         blockBtn.interactable = true;
         healBtn.interactable = true;
@@ -285,11 +324,12 @@ public class GameManager : MonoBehaviour
     }
 
 
-   void ShowVictoryPanel()
+    void ShowVictoryPanel()
     {
         isPlayerTurn = false;
-        victoryText.text = $"You have saved the kingdom from the beast horde!\n\nWins: {winCount} (Best: {highScore})\n\nRumors speak of darker foes beyond the border...";
+        victoryText.text = $"You have saved the kingdom from the beast horde!\n\nWins: {winCount}\n\nRumors speak of darker foes beyond the border...";
         victoryPanel.SetActive(true);
+        if (scoreText != null) scoreText.gameObject.SetActive(false);
         PlaySFX(victorySFX);
     }
 
@@ -307,39 +347,67 @@ public void OnContinueForHighScore()
     enemyAttack += loopCount * 1;
     UpdateUI();
     messageText.text = $"A stronger {currentEnemyName} appears! {enemies[currentEnemyIndex].introLine}";
-    if (scoreText != null) scoreText.text = $"Wins: {winCount} (Best: {highScore})";
+    if (scoreText != null) scoreText.gameObject.SetActive(true);
     attackBtn.interactable = true;
     blockBtn.interactable = true;
     healBtn.interactable = true;
     isPlayerTurn = true;
+    
 }
 
 // Hook to EndButton's OnClick in Inspector
 public void OnEndGameChoice()
 {
     victoryPanel.SetActive(false);
-    EndGame(true, $"🏆 Thanks for playing! Final wins: {winCount} (Best: {highScore})");
+    EndGame(true, $"Thanks for playing! Final wins: {winCount} (Best: {highScore})");
 }
 
     IEnumerator EnemyTurn()
     {
         yield return new WaitForSeconds(1.0f); // let player read their own action first
 
-        messageText.text = "Enemy is preparing to attack...";
+        // Decide: normal attack, or wind up a heavy one? 
+        float currentTelegraphChance = currentEnemyIsBoss ? enemies[currentEnemyIndex].bossTelegraphChance : telegraphChance;
+        bool shouldTelegraph = !isTelegraphing && UnityEngine.Random.value < currentTelegraphChance;
+        
+
+        if (shouldTelegraph)
+        {
+            isTelegraphing = true;
+            messageText.text = $"{currentEnemyName} is winding up a heavy attack!";
+            PlaySFX(telegraphSFX);
+            yield return new WaitForSeconds(1.3f);
+
+            isPlayerTurn = true;
+            messageText.text = "Brace yourself! Choose your action.";
+            attackBtn.interactable = true;
+            blockBtn.interactable = true;
+            healBtn.interactable = true;
+            yield break; // hand control back — the heavy hit resolves on the NEXT enemy turn
+        }
+
+        messageText.text = isTelegraphing ? $"{currentEnemyName} unleashes the heavy attack!" : $"{currentEnemyName} attacks!";
         yield return new WaitForSeconds(1.0f);
 
-        int damage = enemyAttack - playerShield;
-        
+        int baseDamage = enemyAttack;
+        if (isTelegraphing)
+        {
+            baseDamage = Mathf.RoundToInt(enemyAttack * telegraphDamageMultiplier);
+            isTelegraphing = false;
+        }
+
+        int damage = baseDamage - playerShield;
+        if (damage < 0) damage = 0;
+
         SpawnFloatingText(playerTextSpawn, damage > 0 ? $"-{damage}" : "Blocked!", damage > 0 ? Color.red : Color.cyan);
         StartCoroutine(FlashPanel(playerPanelImage, Color.white));
-        PlaySFX(damage > 0 ? enemyAttackSFX : blockedImpactSFX); // see #2 below for blockedImpactSFX
+        PlaySFX(damage > 0 ? enemyAttackSFX : blockedImpactSFX);
 
-        if (damage < 0) damage = 0;
         playerHP -= damage;
         if (playerHP < 0) playerHP = 0;
         playerShield = 0;
 
-        messageText.text = damage > 0 ? $"Enemy attacks for {damage} damage!" : "🛡️ Shield blocked the attack!";
+        messageText.text = damage > 0 ? $"Enemy attacks for {damage} damage!" : "Shield blocked the attack!";
         UpdateUI();
 
         yield return new WaitForSeconds(1.2f);
@@ -348,11 +416,11 @@ public void OnEndGameChoice()
         {
             playerHP = 0;
             UpdateUI();
-            EndGame(false, $"GAME OVER! You have fallen in battle.\nFinal Score: {winCount} wins (Best: {highScore})");
+            EndGame(false, $"GAME OVER! You have fallen in battle.\nFinal Score: {winCount} wins");
             yield break;
         }
 
-        isPlayerTurn = true;   
+        isPlayerTurn = true;
         messageText.text = "Your turn! Choose an action.";
         attackBtn.interactable = true;
         blockBtn.interactable = true;

@@ -5112,6 +5112,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4d13bbe1bafbd46cba884842e441a739, type: 2}
   - {fileID: 11400000, guid: 4a310d21a52914b03b7d88b521b56034, type: 2}
   enemyNameText: {fileID: 374019971}
+  bosses:
+  - {fileID: 11400000, guid: 7b4cb4fab60d7469e92fda4234bdb162, type: 2}
+  - {fileID: 11400000, guid: e976fb4769c7f490187860a95689ed9a, type: 2}
+  - {fileID: 11400000, guid: 6439b26dd5f5c40b68b60335c756973f, type: 2}
   defeatPanel: {fileID: 222600647}
   defeatText: {fileID: 1679645714}
   victoryPanel: {fileID: 138663699}
@@ -5145,6 +5149,9 @@ MonoBehaviour:
   powerStrikeSFX: {fileID: 8300000, guid: d2af4a28a729640ad8f5765f76ab345f, type: 3}
   enemyAppearSFX: {fileID: 8300000, guid: 2c2e5a27622034095bddc1210315f141, type: 3}
   enemyDeathSFX: {fileID: 8300000, guid: 763abf20732fb476cb53763a193ad4f3, type: 3}
+  telegraphChance: 0.25
+  telegraphDamageMultiplier: 1.8
+  telegraphSFX: {fileID: 0}
 --- !u!4 &1763609841
 Transform:
   m_ObjectHideFlags: 0
