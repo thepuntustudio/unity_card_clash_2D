@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe0f859416b7412da56de59cecf8cdf, type: 3}
+  m_Name: Normal_Orc
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Orc
+  maxHP: 30
+  attackDamage: 6
+  enemySprite: {fileID: 3799508404887519019, guid: 850a1b92f08a444ef9d2076693784fb4, type: 3}
+  displaySize: {x: 450, y: 300}
+  introLine: '"An orc warband leader steps forward!"'
+  isBoss: 0
+  bossTelegraphChance: 0.4
+  hurtSFX: {fileID: 0}
+  deathSFX: {fileID: 0}
+  appearSFX: {fileID: 0}

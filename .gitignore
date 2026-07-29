@@ -48,5 +48,5 @@ Thumbs.db
 *.bak
 
 # ============ MISC ============
-*.asset
-*.meta
+# *.asset
+# *.meta
