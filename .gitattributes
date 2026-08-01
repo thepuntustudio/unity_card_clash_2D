@@ -1,11 +1,36 @@
-# Auto detect text files and perform LF normalization
+# Auto detect text files and normalize to LF in the repository
 * text=auto
 
-# C# scripts use LF
+# Source files
 *.cs text eol=lf
+*.shader text eol=lf
+*.compute text eol=lf
+*.cginc text eol=lf
+*.hlsl text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
 
-# Unity assets are binary
-*.asset binary
-*.meta binary
-*.unity binary
-*.prefab binary
+# Unity YAML files
+*.meta text eol=lf
+*.unity text eol=lf
+*.prefab text eol=lf
+*.asset text eol=lf
+*.mat text eol=lf
+*.anim text eol=lf
+*.controller text eol=lf
+*.asmdef text eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.tga binary
+*.psd binary
+*.fbx binary
+*.blend binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.ttf binary
+*.otf binary
