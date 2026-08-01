@@ -27,7 +27,17 @@ public class GameManager : MonoBehaviour
     public Button mainMenuBtn;
     public Button surrenderBtn;
 
-    public Image enemyCharacterImage; // drag your single consolidated Image here
+    //character images for player and enemy, to be assigned in Inspector
+    public Image playerCharacterImage; 
+    public Image enemyCharacterImage; 
+
+    //for the flash effect when taking damage or healing
+    public Image playerFlashOverlay; 
+    public Image enemyFlashOverlay;
+    private Coroutine playerFlashRoutine;
+    private Coroutine enemyFlashRoutine;
+
+
 
     public List<EnemyData> enemies;
     private int currentEnemyIndex = 0;
@@ -87,6 +97,8 @@ public class GameManager : MonoBehaviour
     private bool isTelegraphing = false;
     public AudioClip telegraphSFX;
 
+    //blocking chance for enemies that telegraph a heavy attack
+    [Range(0f, 1f)] public float fullBlockChance = 0.3f;
 
     // Game state
     private int playerMaxHP = 100;
@@ -197,7 +209,7 @@ public class GameManager : MonoBehaviour
             if (enemyHP < 0) enemyHP = 0;
             messageText.text = $"{currentAttackCard.cardName} dealt {dmg} damage!";
             SpawnFloatingText(enemyTextSpawn, $"-{dmg}", Color.red);
-            StartCoroutine(FlashPanel(enemyPanelImage, Color.white));
+            FlashEnemyPanel(Color.darkRed);
             PlaySFX(currentAttackCard == powerStrikeCard ? powerStrikeSFX : attackSFX);
 
             if (UnityEngine.Random.value < potionDropChance)
@@ -222,17 +234,8 @@ public class GameManager : MonoBehaviour
             if (playerHP > playerMaxHP) playerHP = playerMaxHP;
             messageText.text = $"You healed {healCard.value} HP! ({healsRemaining} heals left)";
             SpawnFloatingText(playerTextSpawn, $"+{healCard.value}", Color.green);
-            StartCoroutine(FlashPanel(playerPanelImage, Color.green));
+            FlashPlayerPanel(Color.darkGreen);
             PlaySFX(healSFX);
-        }
-        else if (action == "potion")
-        {
-            playerHP += potionHealAmount;
-            if (playerHP > playerMaxHP) playerHP = playerMaxHP;
-            messageText.text = $"Potion restored {potionHealAmount} HP!";
-            SpawnFloatingText(playerTextSpawn, $"+{potionHealAmount}", Color.cyan);
-            StartCoroutine(FlashPanel(playerPanelImage, Color.cyan));
-            PlaySFX(healSFX); // reuse for now, distinct clip later
         }
 
         UpdateUI();
@@ -286,15 +289,29 @@ public class GameManager : MonoBehaviour
         PlaySFX(data.deathSFX != null ? data.deathSFX : enemyDeathSFX);
         yield return new WaitForSeconds(1.5f);
 
-        currentEnemyIndex++;
-
-        if (currentEnemyIndex >= enemies.Count)
+        if (inBossFight)
         {
-            currentEnemyIndex = 0;
+            inBossFight = false;
+            currentEnemyIsBoss = false;
 
-            if (!inBossFight)
+            bool justFinishedAllBosses = (loopCount + 1) >= bosses.Count;
+
+            if (!endlessMode && justFinishedAllBosses)
             {
-                // Lap of 3 regular enemies complete — face this lap's boss
+                CheckHighScore();
+                ShowVictoryPanel();
+                yield break;
+            }
+
+            loopCount++;
+            currentEnemyIndex = 0; // start the next lap fresh
+        }
+        else
+        {
+            currentEnemyIndex++;
+            if (currentEnemyIndex >= enemies.Count)
+            {
+                currentEnemyIndex = 0;
                 inBossFight = true;
                 EnemyData boss = bosses[loopCount % bosses.Count];
                 LoadEnemy(boss);
@@ -308,20 +325,6 @@ public class GameManager : MonoBehaviour
                 healBtn.interactable = true;
                 isPlayerTurn = true;
                 yield break;
-            }
-            else
-            {
-                // Boss just defeated
-                inBossFight = false;
-                currentEnemyIsBoss = false;
-
-                if (!endlessMode)
-                {
-                    CheckHighScore();
-                    ShowVictoryPanel();
-                    yield break;
-                }
-                loopCount++;
             }
         }
 
@@ -410,18 +413,32 @@ public void OnEndGameChoice()
             isTelegraphing = false;
         }
 
-        int damage = baseDamage - playerShield;
-        if (damage < 0) damage = 0;
+        int damage = baseDamage;
+        bool fullyBlocked = false;
 
-        SpawnFloatingText(playerTextSpawn, damage > 0 ? $"-{damage}" : "Blocked!", damage > 0 ? Color.red : Color.cyan);
-        StartCoroutine(FlashPanel(playerPanelImage, Color.white));
+        if (playerShield > 0)
+        {
+            if (UnityEngine.Random.value < fullBlockChance)
+            {
+                damage = 0;
+                fullyBlocked = true;
+            }
+            else
+            {
+                damage -= playerShield;
+                if (damage < 0) damage = 0;
+            }
+        }
+
+        SpawnFloatingText(playerTextSpawn, damage > 0 ? $"-{damage}" : (fullyBlocked ? "Perfect Block!" : "Blocked!"), damage > 0 ? Color.red : Color.cyan);
+        FlashPlayerPanel(Color.darkRed);
         PlaySFX(damage > 0 ? enemyAttackSFX : blockedImpactSFX);
 
         playerHP -= damage;
         if (playerHP < 0) playerHP = 0;
         playerShield = 0;
 
-        messageText.text = damage > 0 ? $"Enemy attacks for {damage} damage!" : "Shield blocked the attack!";
+        messageText.text = fullyBlocked ? "🛡️ Perfect block! No damage taken!" : (damage > 0 ? $"Enemy attacks for {damage} damage!" : "Shield blocked the attack!");
         UpdateUI();
 
         yield return new WaitForSeconds(1.2f);
@@ -473,6 +490,28 @@ public void OnEndGameChoice()
         bar.value = target;
     }
 
+    IEnumerator FlashOverlay(Image overlay, Color flashColor)
+    {
+        Color c = flashColor;
+        c.a = 0.5f; // adjust intensity to taste
+        overlay.color = c;
+        yield return new WaitForSeconds(0.15f);
+        c.a = 0f;
+        overlay.color = c;
+    }
+
+    void FlashPlayerPanel(Color flashColor)
+    {
+        if (playerFlashRoutine != null) StopCoroutine(playerFlashRoutine);
+        playerFlashRoutine = StartCoroutine(FlashOverlay(playerFlashOverlay, flashColor));
+    }
+
+    void FlashEnemyPanel(Color flashColor)
+    {
+        if (enemyFlashRoutine != null) StopCoroutine(enemyFlashRoutine);
+        enemyFlashRoutine = StartCoroutine(FlashOverlay(enemyFlashOverlay, flashColor));
+    }
+
     void EndGame(bool won, string message)
     {
         gameOver = true;
@@ -505,7 +544,7 @@ public void OnEndGameChoice()
         if (playerHP > playerMaxHP) playerHP = playerMaxHP;
         messageText.text = $"Potion restored {potionHealAmount} HP!";
         SpawnFloatingText(playerTextSpawn, $"+{potionHealAmount}", Color.cyan);
-        StartCoroutine(FlashPanel(playerPanelImage, Color.cyan));
+        FlashPlayerPanel(Color.darkGreen);
         PlaySFX(healSFX);
         UpdateUI();
     }
@@ -514,15 +553,6 @@ public void OnEndGameChoice()
     public void RestartGame()
     {
         StartGame();
-    }
-
- // Add a red flash to whichever panel got hit, and a green flash on heal
-    IEnumerator FlashPanel(Image panelImage, Color flashColor)
-    {
-        Color original = panelImage.color;
-        panelImage.color = flashColor;
-        yield return new WaitForSeconds(0.15f);
-        panelImage.color = original;
     }
 
     void SpawnFloatingText(Transform spawnPoint, string message, Color color)
