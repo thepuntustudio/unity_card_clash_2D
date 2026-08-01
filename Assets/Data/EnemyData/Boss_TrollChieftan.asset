@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Boss_TrollChieftan
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Troll Chieftan
-  maxHP: 80
-  attackDamage: 15
+  maxHP: 70
+  attackDamage: 12
   enemySprite: {fileID: -4141237505901376896, guid: 197a80fe70a004e1d99f06780fc12bbd, type: 3}
   displaySize: {x: 400, y: 400}
   introLine: '"The ground shakes as a massive Troll Chieftain emerges, wielding a

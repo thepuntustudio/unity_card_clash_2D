@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Boss_OrcLord
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Orc Lord
-  maxHP: 60
-  attackDamage: 12
+  maxHP: 55
+  attackDamage: 10
   enemySprite: {fileID: 3799508404887519019, guid: 850a1b92f08a444ef9d2076693784fb4, type: 3}
-  displaySize: {x: 500, y: 330}
-  introLine: '"The Leader of the Orcs wants to hun you down"'
+  displaySize: {x: 520, y: 350}
+  introLine: '"The Leader of the Orcs wants to hunt you down"'
   isBoss: 1
   bossTelegraphChance: 0.454
   hurtSFX: {fileID: 0}

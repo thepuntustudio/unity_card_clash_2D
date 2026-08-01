@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Boss_GoblinKing
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Goblin King
-  maxHP: 50
-  attackDamage: 10
+  maxHP: 45
+  attackDamage: 8
   enemySprite: {fileID: 8749302817991680212, guid: 5ce894478b34644b1b60c9f8962583a0, type: 3}
-  displaySize: {x: 355, y: 285}
+  displaySize: {x: 375, y: 305}
   introLine: '"The Goblin King !"'
   isBoss: 1
   bossTelegraphChance: 0.4

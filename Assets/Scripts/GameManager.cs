@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public List<EnemyData> enemies;
     private int currentEnemyIndex = 0;
     private CardData currentAttackCard;
+    public Text playerNameText;
     public Text enemyNameText; // drag EnemyName object here in Inspector
     private bool currentEnemyIsBoss = false;
     private bool inBossFight = false;
@@ -94,6 +95,13 @@ public class GameManager : MonoBehaviour
     private int enemyHP;
     private int enemyAttack = 12;
     private int playerShield = 0;
+
+    // new fields
+    public int attackBonusPerBoss = 2;
+    public int maxHPBonusPerBoss = 10;
+    private int attackBonus = 0;
+    private int maxHPBonus = 0;
+
     private bool isPlayerTurn = true;
     private bool gameOver = false;
 
@@ -116,6 +124,8 @@ public class GameManager : MonoBehaviour
         currentEnemyIndex = 0;
         winCount = 0;
         loopCount = 0;
+        attackBonus = 0;
+        maxHPBonus = 0;
         endlessMode = false;
         healsRemaining = maxHealsPerFight;
         LoadEnemy(enemies[currentEnemyIndex]);
@@ -182,10 +192,10 @@ public class GameManager : MonoBehaviour
 
         if (action == "attack")
         {
-            int dmg = currentAttackCard.value;
+            int dmg = currentAttackCard.value + attackBonus;
             enemyHP -= dmg;
             if (enemyHP < 0) enemyHP = 0;
-            messageText.text = $"⚔️ {currentAttackCard.cardName} dealt {dmg} damage!";
+            messageText.text = $"{currentAttackCard.cardName} dealt {dmg} damage!";
             SpawnFloatingText(enemyTextSpawn, $"-{dmg}", Color.red);
             StartCoroutine(FlashPanel(enemyPanelImage, Color.white));
             PlaySFX(currentAttackCard == powerStrikeCard ? powerStrikeSFX : attackSFX);
@@ -240,19 +250,19 @@ public class GameManager : MonoBehaviour
         isPlayerTurn = false;
         StartCoroutine(EnemyTurn());
     }
-    void LoadEnemy(EnemyData data)
+   void LoadEnemy(EnemyData data)
     {
         enemyMaxHP = data.maxHP;
         enemyHP = data.maxHP;
         enemyAttack = data.attackDamage;
         currentEnemyIsBoss = data.isBoss;
+        currentEnemyName = data.enemyName;   // <- restore this line
         enemyNameText.text = data.isBoss ? $"{data.enemyName}" : data.enemyName;
 
         enemyCharacterImage.sprite = data.enemySprite;
         enemyCharacterImage.rectTransform.sizeDelta = data.displaySize;
 
-        //play enemy appear SFX, using the enemy's own if available, otherwise fallback to default
-       PlaySFX(data.appearSFX != null ? data.appearSFX : enemyAppearSFX);
+        PlaySFX(data.appearSFX != null ? data.appearSFX : enemyAppearSFX);
     }
 
     IEnumerator NextEnemyRoutine(EnemyData data)
@@ -262,7 +272,11 @@ public class GameManager : MonoBehaviour
         {
             potionCount++;
             UpdatePotionDisplay();
-            messageText.text = $"{currentEnemyName} defeated! Bonus potion earned!";
+            attackBonus += attackBonusPerBoss;
+            playerMaxHP += maxHPBonusPerBoss;
+            playerHP += maxHPBonusPerBoss;
+            messageText.text = $"{currentEnemyName} defeated! Your strength grows! Bonus potion earned!";
+            SpawnFloatingText(playerTextSpawn, $"+{maxHPBonusPerBoss} Max HP!", Color.yellow);
         }
         else
         {
@@ -429,6 +443,7 @@ public void OnEndGameChoice()
 
     void UpdateUI()
     {
+        
         playerHealthBar.maxValue = playerMaxHP;
         enemyHealthBar.maxValue = enemyMaxHP;
         playerHealthText.text = $"HP: {playerHP} / {playerMaxHP}";
@@ -478,7 +493,7 @@ public void OnEndGameChoice()
     }
     public void UsePotion()
     {
-        if (!isPlayerTurn || gameOver) return;
+        if (gameOver) return; // note: no isPlayerTurn check — usable anytime, doesn't cost the turn
         if (potionCount <= 0)
         {
             messageText.text = "No potions available!";
@@ -486,7 +501,13 @@ public void OnEndGameChoice()
         }
         potionCount--;
         UpdatePotionDisplay();
-        PerformPlayerAction("potion");
+        playerHP += potionHealAmount;
+        if (playerHP > playerMaxHP) playerHP = playerMaxHP;
+        messageText.text = $"Potion restored {potionHealAmount} HP!";
+        SpawnFloatingText(playerTextSpawn, $"+{potionHealAmount}", Color.cyan);
+        StartCoroutine(FlashPanel(playerPanelImage, Color.cyan));
+        PlaySFX(healSFX);
+        UpdateUI();
     }
 
     // Called by Restart button
