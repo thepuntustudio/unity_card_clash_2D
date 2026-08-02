@@ -9,27 +9,25 @@ public class ButtonSFX : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
 
     void Start()
     {
-        //check for GameManage instance if not found check for SceneHandler instance
-        if (FindFirstObjectByType<GameManager>() != null)
+        GameManager gm = FindFirstObjectByType<GameManager>();
+        if (gm != null)
         {
-            sfxSource = FindFirstObjectByType<GameManager>().sfxSource;
+            sfxSource = gm.sfxSource;
         }
-        else if (FindFirstObjectByType<SceneHandler>() != null)
+        else
         {
-            sfxSource = FindFirstObjectByType<SceneHandler>().sfxSource;
+            SceneHandler sh = FindFirstObjectByType<SceneHandler>();
+            if (sh != null) sfxSource = sh.sfxSource;
         }
-        //sfxSource = FindFirstObjectByType<GameManager>().GetComponent<AudioSource>();
-        // If you have multiple AudioSources on GameManager, instead expose a public
-        // reference there and grab it explicitly rather than relying on GetComponent order.
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (hoverClip != null) sfxSource.PlayOneShot(hoverClip);
+        if (sfxSource != null && hoverClip != null) sfxSource.PlayOneShot(hoverClip);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (clickClip != null) sfxSource.PlayOneShot(clickClip);
+        if (sfxSource != null && clickClip != null) sfxSource.PlayOneShot(clickClip);
     }
 }

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9060ebe15358442c08318f2c369b4571, type: 3}
   m_Name: Card_Heal
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardIcon: {fileID: 8769610159133123776, guid: 115a1bc4d7d01d547ad556a74587cf31, type: 3}
+  cardBorderColor: {r: 1, g: 1, b: 1, a: 1}
   cardName: Heal
   type: 2
   value: 15

@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public CardData healCard;
     [Range(0f, 1f)] public float powerStrikeChance = 0.15f;
     public TMP_Text attackButtonLabel;
+    public Image attackCardImage; // drag AttackButton itself here
 
     public TMP_Text restartButtonLabel; 
     public Button mainMenuBtn;
@@ -166,7 +167,13 @@ public class GameManager : MonoBehaviour
     {
         currentAttackCard = (UnityEngine.Random.value < powerStrikeChance) ? powerStrikeCard : attackCard;
         attackButtonLabel.text = currentAttackCard.cardName;
+        if (attackCardImage != null && currentAttackCard.cardIcon != null)
+        {
+            attackCardImage.sprite = currentAttackCard.cardIcon;
+            if (currentAttackCard == powerStrikeCard) StartCoroutine(PulseAttackCard());
+        }
     }
+
     // Called when player clicks a button
     public void PlayerAttack()
     {
@@ -204,10 +211,12 @@ public class GameManager : MonoBehaviour
 
         if (action == "attack")
         {
+            StartCoroutine(LungeAttack(playerCharacterImage.rectTransform, Vector2.right));
             int dmg = currentAttackCard.value + attackBonus;
             enemyHP -= dmg;
             if (enemyHP < 0) enemyHP = 0;
             messageText.text = $"{currentAttackCard.cardName} dealt {dmg} damage!";
+            StartCoroutine(HurtFlinch(enemyCharacterImage.rectTransform));
             SpawnFloatingText(enemyTextSpawn, $"-{dmg}", Color.red);
             FlashEnemyPanel(Color.darkRed);
             PlaySFX(currentAttackCard == powerStrikeCard ? powerStrikeSFX : attackSFX);
@@ -415,6 +424,7 @@ public void OnEndGameChoice()
 
         int damage = baseDamage;
         bool fullyBlocked = false;
+        if (damage > 0) StartCoroutine(HurtFlinch(playerCharacterImage.rectTransform));
 
         if (playerShield > 0)
         {
@@ -431,6 +441,7 @@ public void OnEndGameChoice()
         }
 
         SpawnFloatingText(playerTextSpawn, damage > 0 ? $"-{damage}" : (fullyBlocked ? "Perfect Block!" : "Blocked!"), damage > 0 ? Color.red : Color.cyan);
+        StartCoroutine(LungeAttack(enemyCharacterImage.rectTransform, Vector2.left));
         FlashPlayerPanel(Color.darkRed);
         PlaySFX(damage > 0 ? enemyAttackSFX : blockedImpactSFX);
 
@@ -587,6 +598,58 @@ public void OnEndGameChoice()
             PlayerPrefs.SetInt("HighScore", highScore);
             PlayerPrefs.Save();
         }
+    }
+
+    IEnumerator LungeAttack(RectTransform attacker, Vector2 direction, float distance = 40f, float duration = 0.15f)
+    {
+        Vector2 original = attacker.anchoredPosition;
+        Vector2 target = original + direction * distance;
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            attacker.anchoredPosition = Vector2.Lerp(original, target, t / duration);
+            yield return null;
+        }
+        attacker.anchoredPosition = target;
+
+        t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            attacker.anchoredPosition = Vector2.Lerp(target, original, t / duration);
+            yield return null;
+        }
+        attacker.anchoredPosition = original;
+    }
+
+    IEnumerator HurtFlinch(RectTransform target)
+    {
+        Vector3 originalScale = target.localScale;
+        Vector2 originalPos = target.anchoredPosition;
+
+        // quick shrink
+        target.localScale = originalScale * 0.92f;
+
+        // small shake
+        for (int i = 0; i < 3; i++)
+        {
+            target.anchoredPosition = originalPos + new Vector2(UnityEngine.Random.Range(-8f, 8f), 0);
+            yield return new WaitForSeconds(0.04f);
+        }
+
+        target.anchoredPosition = originalPos;
+        target.localScale = originalScale;
+    }
+
+    IEnumerator PulseAttackCard()
+    {
+        RectTransform rt = attackCardImage.rectTransform;
+        Vector3 original = rt.localScale;
+        rt.localScale = original * 1.15f;
+        yield return new WaitForSeconds(0.2f);
+        rt.localScale = original;
     }
 
 }

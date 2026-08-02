@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9060ebe15358442c08318f2c369b4571, type: 3}
   m_Name: Card_Block
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardIcon: {fileID: -8841799450362763069, guid: 48eb53e1989fc4c6b8cebf6acdf42703, type: 3}
+  cardBorderColor: {r: 1, g: 1, b: 1, a: 1}
   cardName: Block
   type: 1
   value: 8

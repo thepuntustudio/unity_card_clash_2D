@@ -1617,6 +1617,7 @@ GameObject:
   - component: {fileID: 402966260}
   - component: {fileID: 402966259}
   - component: {fileID: 402966262}
+  - component: {fileID: 402966263}
   m_Layer: 5
   m_Name: DefenceButton
   m_TagString: Untagged
@@ -1750,6 +1751,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80dd05df6d6a1480b9b7abe0cce9c45f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardButton
+--- !u!114 &402966263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402966257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3dd9a88bbd34304ae993682e563310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSFX
+  hoverClip: {fileID: 8300000, guid: 8561fae9c533848a2aa7d13ec83aae7f, type: 3}
+  clickClip: {fileID: 8300000, guid: 59365535e6daa422caad1b27b478cc03, type: 3}
 --- !u!1 &417804973
 GameObject:
   m_ObjectHideFlags: 0
@@ -1763,6 +1778,7 @@ GameObject:
   - component: {fileID: 417804976}
   - component: {fileID: 417804975}
   - component: {fileID: 417804978}
+  - component: {fileID: 417804979}
   m_Layer: 5
   m_Name: AttackButton
   m_TagString: Untagged
@@ -1896,6 +1912,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80dd05df6d6a1480b9b7abe0cce9c45f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardButton
+--- !u!114 &417804979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417804973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3dd9a88bbd34304ae993682e563310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSFX
+  hoverClip: {fileID: 8300000, guid: 8561fae9c533848a2aa7d13ec83aae7f, type: 3}
+  clickClip: {fileID: 8300000, guid: 59365535e6daa422caad1b27b478cc03, type: 3}
 --- !u!1 &438177546
 GameObject:
   m_ObjectHideFlags: 0
@@ -3386,6 +3416,7 @@ GameObject:
   - component: {fileID: 1388207638}
   - component: {fileID: 1388207637}
   - component: {fileID: 1388207640}
+  - component: {fileID: 1388207641}
   m_Layer: 5
   m_Name: HealButton
   m_TagString: Untagged
@@ -3519,6 +3550,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80dd05df6d6a1480b9b7abe0cce9c45f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardButton
+--- !u!114 &1388207641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388207635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3dd9a88bbd34304ae993682e563310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSFX
+  hoverClip: {fileID: 8300000, guid: 8561fae9c533848a2aa7d13ec83aae7f, type: 3}
+  clickClip: {fileID: 8300000, guid: 59365535e6daa422caad1b27b478cc03, type: 3}
 --- !u!1 &1400944553
 GameObject:
   m_ObjectHideFlags: 0
@@ -4921,6 +4966,7 @@ MonoBehaviour:
   healCard: {fileID: 11400000, guid: 475dbc256bb664064afa4083536a5ffd, type: 2}
   powerStrikeChance: 0.15
   attackButtonLabel: {fileID: 711380120}
+  attackCardImage: {fileID: 417804976}
   restartButtonLabel: {fileID: 361561279}
   mainMenuBtn: {fileID: 1582068139}
   surrenderBtn: {fileID: 1812943901}

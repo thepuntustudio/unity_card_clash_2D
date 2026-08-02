@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9060ebe15358442c08318f2c369b4571, type: 3}
   m_Name: Card_PowerStrike
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardIcon: {fileID: -2869435724393107858, guid: 757873db43fa248c49f1b187ef8aa684, type: 3}
+  cardBorderColor: {r: 1, g: 1, b: 1, a: 1}
   cardName: Power Strike
   type: 3
   value: 10

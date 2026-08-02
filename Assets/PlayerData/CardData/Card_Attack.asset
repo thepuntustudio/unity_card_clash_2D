@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9060ebe15358442c08318f2c369b4571, type: 3}
   m_Name: Card_Attack
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardIcon: {fileID: -7846178793569843009, guid: 71f195daa230b4f398df3120b212e15d, type: 3}
+  cardBorderColor: {r: 1, g: 1, b: 1, a: 1}
   cardName: Attack
   type: 0
   value: 5
