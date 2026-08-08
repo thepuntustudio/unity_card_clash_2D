@@ -8,6 +8,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+
+    private int totalWins = 0; // you likely already have `winCount` for this — reuse it, don't duplicate
+    private int enemiesDefeated = 0;
+    private int bossesDefeated = 0;
+    public TMP_Text statsText; // "Total Wins: 16   Enemies: 12   Bosses: 4"
+
     private int highScore = 0;
     public int maxHealsPerFight = 2;
     private int healsRemaining;
@@ -32,6 +38,15 @@ public class GameManager : MonoBehaviour
     public Image playerCharacterImage; 
     public Image enemyCharacterImage; 
 
+    //player hit points for particle effects
+    public Transform playerHitPoint;
+    public Transform enemyHitPoint;
+    
+    //particle effects for player and enemy, to be assigned in Inspector
+    public GameObject hitParticlePrefab;
+    public GameObject healParticlePrefab;
+    public GameObject blockParticlePrefab;
+
     //for the flash effect when taking damage or healing
     public Image playerFlashOverlay; 
     public Image enemyFlashOverlay;
@@ -48,6 +63,8 @@ public class GameManager : MonoBehaviour
     private bool currentEnemyIsBoss = false;
     private bool inBossFight = false;
     public List<EnemyData> bosses;
+
+    public GameObject confirmSurrenderPanel;
 
     public GameObject defeatPanel;
     public TMP_Text defeatText;
@@ -133,6 +150,15 @@ public class GameManager : MonoBehaviour
 
     void StartGame()
     {
+        if (GameData.Instance != null)
+        {
+            playerNameText.text = GameData.Instance.playerName;
+            playerCharacterImage.sprite = GameData.Instance.selectedCharacterSprite;
+        }
+
+        enemiesDefeated = 0;
+        bossesDefeated = 0;
+        UpdateStatsDisplay();
         playerHP = playerMaxHP;
         currentEnemyIndex = 0;
         winCount = 0;
@@ -217,6 +243,7 @@ public class GameManager : MonoBehaviour
             if (enemyHP < 0) enemyHP = 0;
             messageText.text = $"{currentAttackCard.cardName} dealt {dmg} damage!";
             StartCoroutine(HurtFlinch(enemyCharacterImage.rectTransform));
+            SpawnParticle(hitParticlePrefab, enemyHitPoint);
             SpawnFloatingText(enemyTextSpawn, $"-{dmg}", Color.red);
             FlashEnemyPanel(Color.darkRed);
             PlaySFX(currentAttackCard == powerStrikeCard ? powerStrikeSFX : attackSFX);
@@ -235,6 +262,8 @@ public class GameManager : MonoBehaviour
             playerShield = blockCard.value;
             PlaySFX(blockSFX);
             messageText.text = "You raise your shield!";
+            // SpawnParticle(blockParticlePrefab, playerHitPoint);
+           
         }
         else if (action == "heal")
         {
@@ -242,6 +271,7 @@ public class GameManager : MonoBehaviour
             playerHP += healCard.value;
             if (playerHP > playerMaxHP) playerHP = playerMaxHP;
             messageText.text = $"You healed {healCard.value} HP! ({healsRemaining} heals left)";
+            SpawnParticle(healParticlePrefab, playerHitPoint);
             SpawnFloatingText(playerTextSpawn, $"+{healCard.value}", Color.green);
             FlashPlayerPanel(Color.darkGreen);
             PlaySFX(healSFX);
@@ -282,6 +312,7 @@ public class GameManager : MonoBehaviour
         winCount++;
         if (currentEnemyIsBoss)
         {
+            bossesDefeated++;
             potionCount++;
             UpdatePotionDisplay();
             attackBonus += attackBonusPerBoss;
@@ -292,9 +323,11 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            enemiesDefeated++;
             messageText.text = $"{currentEnemyName} defeated!";
         }
-        UpdateScoreDisplay();
+        UpdateStatsDisplay();
+        // UpdateScoreDisplay();
         PlaySFX(data.deathSFX != null ? data.deathSFX : enemyDeathSFX);
         yield return new WaitForSeconds(1.5f);
 
@@ -353,7 +386,7 @@ public class GameManager : MonoBehaviour
     void ShowVictoryPanel()
     {
         isPlayerTurn = false;
-        victoryText.text = $"You have saved the kingdom from the beast horde!\n\nWins: {winCount}\n\nRumors speak of darker foes beyond the border...";
+        victoryText.text = $"You have saved the kingdom!\n\nTotal Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})\n\nRumors speak of darker foes lurking beyond the horizon...";
         victoryPanel.SetActive(true);
         if (scoreText != null) scoreText.gameObject.SetActive(false);
         PlaySFX(victorySFX);
@@ -385,7 +418,7 @@ public void OnContinueForHighScore()
 public void OnEndGameChoice()
 {
     victoryPanel.SetActive(false);
-    EndGame(true, $"Thanks for playing! Final wins: {winCount} (Best: {highScore})");
+    EndGame(true, $"Thanks for playing! Total Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})");
 }
 
     IEnumerator EnemyTurn()
@@ -424,7 +457,6 @@ public void OnEndGameChoice()
 
         int damage = baseDamage;
         bool fullyBlocked = false;
-        if (damage > 0) StartCoroutine(HurtFlinch(playerCharacterImage.rectTransform));
 
         if (playerShield > 0)
         {
@@ -440,6 +472,12 @@ public void OnEndGameChoice()
             }
         }
 
+        if (damage > 0)
+        {
+            StartCoroutine(HurtFlinch(playerCharacterImage.rectTransform));
+        }
+
+        
         SpawnFloatingText(playerTextSpawn, damage > 0 ? $"-{damage}" : (fullyBlocked ? "Perfect Block!" : "Blocked!"), damage > 0 ? Color.red : Color.cyan);
         StartCoroutine(LungeAttack(enemyCharacterImage.rectTransform, Vector2.left));
         FlashPlayerPanel(Color.darkRed);
@@ -448,8 +486,8 @@ public void OnEndGameChoice()
         playerHP -= damage;
         if (playerHP < 0) playerHP = 0;
         playerShield = 0;
-
-        messageText.text = fullyBlocked ? "🛡️ Perfect block! No damage taken!" : (damage > 0 ? $"Enemy attacks for {damage} damage!" : "Shield blocked the attack!");
+        SpawnParticle(fullyBlocked ? blockParticlePrefab : hitParticlePrefab, playerHitPoint);
+        messageText.text = fullyBlocked ? "Perfect block! No damage taken!" : (damage > 0 ? $"Enemy attacks for {damage} damage!" : "Shield blocked the attack!");
         UpdateUI();
 
         yield return new WaitForSeconds(1.2f);
@@ -458,7 +496,7 @@ public void OnEndGameChoice()
         {
             playerHP = 0;
             UpdateUI();
-            EndGame(false, $"GAME OVER! You have fallen in battle.\nFinal Score: {winCount} wins");
+            EndGame(false, $"GAME OVER!\nTotal Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})");
             yield break;
         }
 
@@ -479,6 +517,12 @@ public void OnEndGameChoice()
 
         StartCoroutine(SmoothBar(playerHealthBar, playerHP));
         StartCoroutine(SmoothBar(enemyHealthBar, enemyHP));
+    }
+
+    void UpdateStatsDisplay()
+    {
+        if (statsText != null)
+            statsText.text = $"Total Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated}";
     }
 
     void UpdatePotionDisplay()
@@ -554,6 +598,7 @@ public void OnEndGameChoice()
         playerHP += potionHealAmount;
         if (playerHP > playerMaxHP) playerHP = playerMaxHP;
         messageText.text = $"Potion restored {potionHealAmount} HP!";
+        SpawnParticle(healParticlePrefab, playerHitPoint);
         SpawnFloatingText(playerTextSpawn, $"+{potionHealAmount}", Color.cyan);
         FlashPlayerPanel(Color.darkGreen);
         PlaySFX(healSFX);
@@ -575,7 +620,7 @@ public void OnEndGameChoice()
     public void OnSurrender()
     {
         if (gameOver) return;
-        EndGame(false, $"You surrendered.\nFinal Score: {winCount} wins (Best: {highScore})");
+        EndGame(false, $"You surrendered.\nTotal Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})");
     }
 
     public void OnMainMenu()
@@ -585,10 +630,10 @@ public void OnEndGameChoice()
         
     }
 
-    void UpdateScoreDisplay()
-    {
-        if (scoreText != null) scoreText.text = $"Wins: {winCount} (Best: {highScore})";
-    }
+    // void UpdateScoreDisplay()
+    // {
+    //     if (scoreText != null) scoreText.text = $"Wins: {winCount} (Best: {highScore})";
+    // }
 
     void CheckHighScore()
     {
@@ -598,6 +643,12 @@ public void OnEndGameChoice()
             PlayerPrefs.SetInt("HighScore", highScore);
             PlayerPrefs.Save();
         }
+    }
+
+    void SpawnParticle(GameObject prefab, Transform spawnPoint)
+    {
+        if (prefab == null) return;
+        Instantiate(prefab, spawnPoint.position, Quaternion.identity); // no parent — avoids inheriting Canvas's tiny scale
     }
 
     IEnumerator LungeAttack(RectTransform attacker, Vector2 direction, float distance = 40f, float duration = 0.15f)
@@ -650,6 +701,24 @@ public void OnEndGameChoice()
         rt.localScale = original * 1.15f;
         yield return new WaitForSeconds(0.2f);
         rt.localScale = original;
+    }
+
+    // SurrenderButton's OnClick() now points here instead of directly at OnSurrender()
+    public void OnSurrenderClicked()
+    {
+        if (gameOver) return;
+        confirmSurrenderPanel.SetActive(true);
+    }
+
+    public void OnConfirmSurrenderYes()
+    {
+        confirmSurrenderPanel.SetActive(false);
+        EndGame(false, $"You surrendered.\nTotal Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})");
+    }
+
+    public void OnConfirmSurrenderNo()
+    {
+        confirmSurrenderPanel.SetActive(false);
     }
 
 }
