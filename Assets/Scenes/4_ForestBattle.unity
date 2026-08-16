@@ -1120,7 +1120,7 @@ GameObject:
   - component: {fileID: 350371629}
   - component: {fileID: 350371630}
   m_Layer: 5
-  m_Name: EndButton
+  m_Name: MapButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1230,7 +1230,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1763609840}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnEndGameChoice
+        m_MethodName: OnReturnToMap
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2441,7 +2441,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Return Home
+  m_text: Return To Map
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7a0bb9e07f4c34c46aff22b42da8c488, type: 2}
   m_sharedMaterial: {fileID: 6469469086084145974, guid: 7a0bb9e07f4c34c46aff22b42da8c488, type: 2}
@@ -2468,7 +2468,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 33.55
+  m_fontSize: 28.4
   m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3636,7 +3636,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Main Menu
+  m_text: Return to Map
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7a0bb9e07f4c34c46aff22b42da8c488, type: 2}
   m_sharedMaterial: {fileID: 6469469086084145974, guid: 7a0bb9e07f4c34c46aff22b42da8c488, type: 2}
@@ -4820,7 +4820,7 @@ GameObject:
   - component: {fileID: 1582068139}
   - component: {fileID: 1582068140}
   m_Layer: 5
-  m_Name: MainMenuButton
+  m_Name: MapButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4930,7 +4930,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1763609840}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnMainMenu
+        m_MethodName: OnReturnToMap
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

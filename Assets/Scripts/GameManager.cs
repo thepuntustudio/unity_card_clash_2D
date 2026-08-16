@@ -342,6 +342,13 @@ public class GameManager : MonoBehaviour
             {
                 CheckHighScore();
                 ShowVictoryPanel();
+                // In NextEnemyRoutine(), where the finite Victory triggers:
+                if (GameData.Instance != null && !string.IsNullOrEmpty(GameData.Instance.currentLocationKey))
+                {
+                    PlayerPrefs.SetInt($"Location_{GameData.Instance.currentLocationKey}_Completed", 1);
+                    PlayerPrefs.SetInt($"Location_{GameData.Instance.currentLocationKey}_Unlocked", 1); // ensure it stays unlocked
+                    PlayerPrefs.Save();
+                }
                 yield break;
             }
 
@@ -626,8 +633,13 @@ public void OnEndGameChoice()
     public void OnMainMenu()
     {
         // TODO: once a Main Menu scene exists, replace this with:
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("0_MainMenu");
         
+    }
+
+    public void OnReturnToMap() // renamed for clarity — same behavior
+    {
+        SceneManager.LoadScene("2_CampaignMap");
     }
 
     // void UpdateScoreDisplay()

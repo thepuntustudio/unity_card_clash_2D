@@ -385,6 +385,81 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &328239764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 328239765}
+  - component: {fileID: 328239766}
+  - component: {fileID: 328239767}
+  m_Layer: 5
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &328239765
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328239764}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 686191230}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &328239766
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328239764}
+  m_CullTransparentMesh: 1
+--- !u!114 &328239767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328239764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 5088316998373936774, guid: 46132d95f01f8f048843d966efbfabc1, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &686191229
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,8 +489,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1708006718}
+  m_Children:
+  - {fileID: 328239765}
+  m_Father: {fileID: 773100829}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -517,6 +593,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 784522567}
+  - {fileID: 686191230}
   - {fileID: 1003617890}
   m_Father: {fileID: 1708006718}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -580,7 +657,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &784522567
 RectTransform:
   m_ObjectHideFlags: 0
@@ -620,7 +697,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5119980863986964875, guid: dbb8a8251e8764e7ebe32b8fd5bfbaed, type: 3}
+  m_Sprite: {fileID: 5088316998373936774, guid: 46132d95f01f8f048843d966efbfabc1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -869,7 +946,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 686191230}
   - {fileID: 773100829}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -907,18 +983,129 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d57304eb16036b4fa9f11a2dcf0065d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CinematicController
-  backgroundImage: {fileID: 784522568}
+  backgroundImage: {fileID: 328239767}
   storyText: {fileID: 1003617888}
   slides:
-  - image: {fileID: 8606453610214823136, guid: 87c863a6a3be64dd7bd0f2618e829064, type: 3}
-    text: Long ago there was a hunted place
-  - image: {fileID: -4141237505901376896, guid: 197a80fe70a004e1d99f06780fc12bbd, type: 3}
-    text: There lived and warlord
-  - image: {fileID: 5464483463850216247, guid: 35182424406a0475593f7249a914e5d8, type: 3}
-    text: Then you came to destory them
+  - image: {fileID: 5088316998373936774, guid: 46132d95f01f8f048843d966efbfabc1, type: 3}
+    text: 'Long ago, there existed a peaceful kingdom.
+
+
+      The people lived in
+      harmony, prosperity filled the land, and hope shone in every heart.'
+  - image: {fileID: -855298285791758126, guid: 7ff457eac196b334eb22864348ea530b, type: 3}
+    text: 'But darkness was born from envy.
+
+
+      A group of evil sorcerers and
+      cults summoned forbidden powers.
+
+
+      They opened the gates to evil and
+      called forth an army of demons, monsters, and undead.'
+  - image: {fileID: 6937817954938267909, guid: fe173e1f3196e1344845c7504d7f7bfd, type: 3}
+    text: 'Led by their vile masters, their armies spread like endless war across
+      the world.
+
+
+      Kingdoms fell. Innocents suffered.
+
+
+      The world was
+      plunged into fear and chaos.'
+  - image: {fileID: -4178046375966092550, guid: 7f4043eee77b26c4fb6a94cef132e8bf, type: 3}
+    text: "In those troubled times, a lone traveler roamed the lands.  \nA warrior,
+      trained in ancient ways, born of a bloodline long forgotten.  \n\nFate had
+      led the chosen one to the kingdom in despair."
+  - image: {fileID: -6470460504253458178, guid: 7f025f4976724f14ca292e2d64cb7e36, type: 3}
+    text: 'When he arrived, he saw the kingdom in ruins.
+
+
+      Monsters and undead
+      hordes attacked without mercy.
+
+
+      Villagers lived in fear, with no hope
+      in sight.'
+  - image: {fileID: 4130640169021434097, guid: a8771a3867229864e8e2e29e924bd20e, type: 3}
+    text: "As he marched ahead people gazed him with surprise. \n\nHow can someone
+      come here without any fear of the monsters??\n"
+  - image: {fileID: 3465286685962602723, guid: e202c9920725d2141b6b514db4211790, type: 3}
+    text: 'KING:
+
+
+      "Brave traveler, our kingdom is falling.
+
+
+      Only you
+      can save us from this darkness.
+
+
+      Please, slay the evil and restore peace
+      to our land.
+
+
+      I will reward you with riches beyond measure."'
+  - image: {fileID: 7028616704906629411, guid: 79a37ae8ea7200542818695ab1febd67, type: 3}
+    text: "TRAVELER:\n\"I seek no treasure or glory, Your Majesty.  \n\nI am but
+      a wanderer.  My path is my own.\""
+  - image: {fileID: 8288426215254106694, guid: 9b50cf303f9ba1b47ad329f2130e4195, type: 3}
+    text: 'VILLAGERS:
+
+
+      "Please! Save us, brave one!"
+
+
+      "Our homes, our
+      families... all we have is slipping away!"
+
+
+      "For the sake of our children,
+      help us!"'
+  - image: {fileID: 4113829005332862926, guid: c80c3c417f9992641829177c6aa7076d, type: 3}
+    text: 'He saw the pain in their eyes.
+
+
+      Children who had lost their families.
+
+
+      Hearts
+      crushed by endless suffering.
+
+
+      The warrior''s heart could not remain
+      unmoved.'
+  - image: {fileID: -5099292496197868168, guid: b5b939cb8c218d547b23743536a22f68, type: 3}
+    text: "TRAVELER:\n\"Very well.  For the people, for the innocent, \nI will stand
+      against the darkness.  I will fight.\""
+  - image: {fileID: -2966200626249415253, guid: 99fd27628a8b7db478456ddf36a9a2e4, type: 3}
+    text: With a new purpose, the warrior left the city and ventured into the wilds,
+      determined to confront the evil at its source.
+  - image: {fileID: -1540426309290004842, guid: ed2c5e9939e57c9429b6e407efde635f, type: 3}
+    text: 'He entered the Forgotten Forest, where shadows moved and evil creatures
+      lurked.
+
+
+      An ancient forest where few dared to venture.'
+  - image: {fileID: 8389134475083476877, guid: e113004919fc2e3409eb1d79fc6db298, type: 3}
+    text: "There he encountered hordes of goblins, orcs, and trolls.  \n\nThey surrounded
+      him, roaring for blood!"
+  - image: {fileID: -6270953770400647376, guid: 2455ef4d70724554bba3e1c73a8482cb, type: 3}
+    text: "TROLL CHIEFTAIN:\n\n \"Who dares trespass in our land, human?  Turn back
+      now, or face the might of our horde!  \n\nProve your strength, if you wish
+      to survive!\""
+  - image: {fileID: 4349915267927364619, guid: ba7d83434a30a55408720b23eb2eb46b, type: 3}
+    text: "TROLL CHIEFTAIN:\n\n\"I am Gruk, chieftain of this horde!  You have entered
+      our land and challenged my warriors.  Now prove your strength!\"  \n\nThe challenge
+      is set.  The battle begins now."
+  - image: {fileID: 7680820834086852892, guid: 60946d983928a4b40b8ecd944815d717, type: 3}
+    text: '
+
+
+      Loading Game . . . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . .'
   charDelay: 0.03
   holdAfterTyping: 1.5
-  nextSceneName: BattleScene1
+  nextSceneName: 4_ForestBattle
 --- !u!4 &1975570755
 Transform:
   m_ObjectHideFlags: 0

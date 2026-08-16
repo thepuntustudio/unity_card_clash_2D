@@ -4,13 +4,6 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-[System.Serializable]
-public class CinematicSlide
-{
-    public Sprite image;
-    [TextArea] public string text;
-}
-
 public class CinematicController : MonoBehaviour
 {
     public Image backgroundImage;
@@ -18,7 +11,7 @@ public class CinematicController : MonoBehaviour
     public CinematicSlide[] slides;
     public float charDelay = 0.03f;
     public float holdAfterTyping = 1.5f;
-    public string nextSceneName = "BattleScene1";
+    public string nextSceneName = "CampaignMap";
 
     private int currentSlide = 0;
     private bool isTyping = false;

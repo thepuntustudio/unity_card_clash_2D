@@ -19,6 +19,19 @@ public class CharacterSelect : MonoBehaviour
     void Start()
     {
         if (warningText != null) warningText.gameObject.SetActive(false);
+
+        // Pre-fill if the player already chose a character this session (e.g. came back via Back button)
+        if (GameData.Instance != null && GameData.Instance.hasSelectedCharacter)
+        {
+            nameInput.text = GameData.Instance.playerName;
+            chosenSprite = GameData.Instance.selectedCharacterSprite;
+            hasChosenCharacter = true;
+
+            // Re-show the correct highlight based on which was picked
+            bool wasFemale = GameData.Instance.isFemaleKnight;
+            maleSelectHighlight.gameObject.SetActive(!wasFemale);
+            femaleSelectHighlight.gameObject.SetActive(wasFemale);
+        }
     }
 
     public void SelectMale()
@@ -53,7 +66,10 @@ public class CharacterSelect : MonoBehaviour
         HideWarning();
         GameData.Instance.playerName = nameInput.text.Trim();
         GameData.Instance.selectedCharacterSprite = chosenSprite;
-        SceneManager.LoadScene("Cinematic");
+        GameData.Instance.isFemaleKnight = (chosenSprite == femaleKnightSprite);
+        GameData.Instance.hasSelectedCharacter = true; // <- the missing piece
+
+        SceneManager.LoadScene("2_CampaignMap");
     }
 
 void ShowWarning(string message)

@@ -4,6 +4,9 @@ public class GameData : MonoBehaviour
 {
     public static GameData Instance;
 
+    public string currentLocationKey;
+    public bool hasSelectedCharacter = false; // see below
+
     public string playerName = "Hero";
     public Sprite selectedCharacterSprite;
     public bool isFemaleKnight;
@@ -19,5 +22,5 @@ public class GameData : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
+    } 
 }
