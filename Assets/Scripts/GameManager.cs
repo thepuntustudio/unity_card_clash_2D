@@ -115,6 +115,16 @@ public class GameManager : MonoBehaviour
     private bool isTelegraphing = false;
     public AudioClip telegraphSFX;
 
+    //ingame cinematics
+    public GameObject resultCinematicPanel;
+    public Image resultCinematicImage;
+    public TMP_Text resultCinematicText;
+    public CinematicSlide[] victorySlides;
+    public CinematicSlide[] defeatSlides;
+    public CinematicSlide[] endlessDefeatSlides; // optional, can leave unassigned if skipping
+    public float resultCharDelay = 0.03f;
+    public float resultHoldAfterTyping = 1.2f;
+
     //blocking chance for enemies that telegraph a heavy attack
     [Range(0f, 1f)] public float fullBlockChance = 0.3f;
 
@@ -341,14 +351,12 @@ public class GameManager : MonoBehaviour
             if (!endlessMode && justFinishedAllBosses)
             {
                 CheckHighScore();
-                ShowVictoryPanel();
-                // In NextEnemyRoutine(), where the finite Victory triggers:
                 if (GameData.Instance != null && !string.IsNullOrEmpty(GameData.Instance.currentLocationKey))
                 {
                     PlayerPrefs.SetInt($"Location_{GameData.Instance.currentLocationKey}_Completed", 1);
-                    PlayerPrefs.SetInt($"Location_{GameData.Instance.currentLocationKey}_Unlocked", 1); // ensure it stays unlocked
                     PlayerPrefs.Save();
                 }
+                StartCoroutine(PlayResultCinematic(victorySlides, ShowVictoryPanel));
                 yield break;
             }
 
@@ -503,7 +511,9 @@ public void OnEndGameChoice()
         {
             playerHP = 0;
             UpdateUI();
-            EndGame(false, $"GAME OVER!\nTotal Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})");
+            string message = $"GAME OVER!\nTotal Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})";
+            CinematicSlide[] slidesToPlay = endlessMode ? endlessDefeatSlides : defeatSlides;
+            StartCoroutine(PlayResultCinematic(slidesToPlay, () => EndGame(false, message)));
             yield break;
         }
 
@@ -725,12 +735,45 @@ public void OnEndGameChoice()
     public void OnConfirmSurrenderYes()
     {
         confirmSurrenderPanel.SetActive(false);
-        EndGame(false, $"You surrendered.\nTotal Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})");
+        string message = $"You surrendered.\nTotal Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})";
+        CinematicSlide[] slidesToPlay = endlessMode ? endlessDefeatSlides : defeatSlides;
+        StartCoroutine(PlayResultCinematic(slidesToPlay, () => EndGame(false, message)));
     }
 
     public void OnConfirmSurrenderNo()
     {
         confirmSurrenderPanel.SetActive(false);
+    }
+
+        IEnumerator PlayResultCinematic(CinematicSlide[] slides, System.Action onComplete)
+    {
+        if (slides == null || slides.Length == 0)
+        {
+            onComplete?.Invoke();
+            yield break;
+        }
+
+        resultCinematicPanel.SetActive(true);
+
+        foreach (var slide in slides)
+        {
+            resultCinematicImage.sprite = slide.image;
+            yield return StartCoroutine(TypeResultText(slide.text));
+            yield return new WaitForSeconds(resultHoldAfterTyping);
+        }
+
+        resultCinematicPanel.SetActive(false);
+        onComplete?.Invoke();
+    }
+
+    IEnumerator TypeResultText(string fullText)
+    {
+        resultCinematicText.text = "";
+        foreach (char c in fullText)
+        {
+            resultCinematicText.text += c;
+            yield return new WaitForSeconds(resultCharDelay);
+        }
     }
 
 }

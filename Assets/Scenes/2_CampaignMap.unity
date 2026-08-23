@@ -1233,7 +1233,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 511, y: -255.41}
+  m_AnchoredPosition: {x: -462, y: -331.44}
   m_SizeDelta: {x: 140.8374, y: 151.6308}
   m_Pivot: {x: 0.4999999, y: 0.46039093}
 --- !u!114 &842185266
@@ -1895,7 +1895,7 @@ MonoBehaviour:
     lockImage: {fileID: 825529849}
     playerStandPosition: {x: -257, y: 12}
     isImplemented: 1
-    battleSceneName: 4_ForestBattle
+    battleSceneName: 3_Cinematic
   - locationKey: Dungeon
     locationButton: {fileID: 1938956702}
     bannerImage: {fileID: 898883623}
