@@ -8,8 +8,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
-    private int totalWins = 0; // you likely already have `winCount` for this — reuse it, don't duplicate
     private int enemiesDefeated = 0;
     private int bossesDefeated = 0;
     public TMP_Text statsText; // "Total Wins: 16   Enemies: 12   Bosses: 4"
@@ -31,7 +29,6 @@ public class GameManager : MonoBehaviour
     public Image attackCardImage; // drag AttackButton itself here
 
     public TMP_Text restartButtonLabel; 
-    public Button mainMenuBtn;
     public Button surrenderBtn;
 
     //character images for player and enemy, to be assigned in Inspector
@@ -140,7 +137,6 @@ public class GameManager : MonoBehaviour
     public int attackBonusPerBoss = 2;
     public int maxHPBonusPerBoss = 10;
     private int attackBonus = 0;
-    private int maxHPBonus = 0;
 
     private bool isPlayerTurn = true;
     private bool gameOver = false;
@@ -174,7 +170,6 @@ public class GameManager : MonoBehaviour
         winCount = 0;
         loopCount = 0;
         attackBonus = 0;
-        maxHPBonus = 0;
         endlessMode = false;
         healsRemaining = maxHealsPerFight;
         LoadEnemy(enemies[currentEnemyIndex]);
@@ -344,7 +339,6 @@ public class GameManager : MonoBehaviour
         if (inBossFight)
         {
             inBossFight = false;
-            currentEnemyIsBoss = false;
 
             bool justFinishedAllBosses = (loopCount + 1) >= bosses.Count;
 
@@ -634,12 +628,6 @@ public void OnEndGameChoice()
         go.GetComponent<FloatingText>().Setup(message, color);
     }
 
-    public void OnSurrender()
-    {
-        if (gameOver) return;
-        EndGame(false, $"You surrendered.\nTotal Wins: {winCount}   Enemies: {enemiesDefeated}   Bosses: {bossesDefeated} (Best: {highScore})");
-    }
-
     public void OnMainMenu()
     {
         // TODO: once a Main Menu scene exists, replace this with:
@@ -766,15 +754,21 @@ public void OnEndGameChoice()
         onComplete?.Invoke();
     }
 
-    IEnumerator TypeResultText(string fullText)
-    {
-        resultCinematicText.text = "";
-        foreach (char c in fullText)
+       IEnumerator TypeResultText(string fullText)
         {
-            resultCinematicText.text += c;
-            yield return new WaitForSeconds(resultCharDelay);
+            string processedText = fullText;
+            if (GameData.Instance != null && !string.IsNullOrEmpty(GameData.Instance.playerName))
+            {
+                processedText = fullText.Replace("[PlayerName]", GameData.Instance.playerName);
+            }
+
+            resultCinematicText.text = "";
+            foreach (char c in processedText)
+            {
+                resultCinematicText.text += c;
+                yield return new WaitForSeconds(resultCharDelay);
+            }
         }
-    }
 
 }
 

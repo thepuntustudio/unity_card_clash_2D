@@ -846,8 +846,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4278223021
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -864,13 +864,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 40.8
+  m_fontSizeBase: 40.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -933,7 +933,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -267, y: -237}
+  m_AnchoredPosition: {x: -237, y: -237}
   m_SizeDelta: {x: 1219.51, y: 116.13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &274597160
@@ -1821,7 +1821,7 @@ GameObject:
   - component: {fileID: 364752947}
   - component: {fileID: 364752951}
   m_Layer: 5
-  m_Name: TryAgainButton
+  m_Name: RestartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5110,7 +5110,7 @@ GameObject:
   - component: {fileID: 1582068139}
   - component: {fileID: 1582068140}
   m_Layer: 5
-  m_Name: MapButton
+  m_Name: ReturnHomeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6152,7 +6152,6 @@ MonoBehaviour:
   attackButtonLabel: {fileID: 711380120}
   attackCardImage: {fileID: 417804976}
   restartButtonLabel: {fileID: 361561279}
-  mainMenuBtn: {fileID: 1582068139}
   surrenderBtn: {fileID: 1812943901}
   playerCharacterImage: {fileID: 1806185349}
   enemyCharacterImage: {fileID: 1815411507}
@@ -6214,14 +6213,36 @@ MonoBehaviour:
   resultCinematicImage: {fileID: 917722493}
   resultCinematicText: {fileID: 251713534}
   victorySlides:
-  - image: {fileID: 5088316998373936774, guid: 46132d95f01f8f048843d966efbfabc1, type: 3}
-    text: Victory
+  - image: {fileID: -8787238756055001007, guid: 229c6013daf6aa7439ed7b4fe3250dd8, type: 3}
+    text: 'The final blow lands true. The beast collapses into the mud, its roar
+      silenced at last.
+
+
+      [PlayerName] lowers their blade, breathing hard.
+      The forest falls quiet for the first time in years.
+
+'
+  - image: {fileID: 2058706809549236338, guid: 731e5a05d0721e947ac04f75a4447994, type: 3}
+    text: Word will reach the kingdom by morning. But even as peace returns... something
+      stirs beyond the horizon.
   defeatSlides:
-  - image: {fileID: -855298285791758126, guid: 7ff457eac196b334eb22864348ea530b, type: 3}
-    text: Defeat
+  - image: {fileID: -8048513154784661654, guid: fc9abbae5aeb1414fad66b66a752909f, type: 3}
+    text: "Steel meets flesh - but not the enemy's. [PlayerName] staggers, strength
+      failing.\n\nThe beast laughs \u2014 a low, grinding sound. 'Another one falls
+      before me. You were never a match.'"
+  - image: {fileID: 4092212789895258648, guid: 3e37143274a584543920971094aa0687, type: 3}
+    text: Darkness creeps at the edges of sight. This tale ends here... but perhaps
+      not forever.
   endlessDefeatSlides:
-  - image: {fileID: 4349915267927364619, guid: ba7d83434a30a55408720b23eb2eb46b, type: 3}
-    text: Endless
+  - image: {fileID: -5632707634560418529, guid: ec5d0b378fde5f94ebbeac38f49feaf1, type: 3}
+    text: 'Wave after wave, [PlayerName] stood unbroken - until finally, even legends
+      must yield.
+
+
+      No shame in this fall. Few have carved so long a path through
+      the horde.'
+  - image: {fileID: -7194346518086056109, guid: bbab036c2fd8b354893cd8566db4c121, type: 3}
+    text: Rest now, hero. Your name will be remembered long after the horde is forgotten
   resultCharDelay: 0.03
   resultHoldAfterTyping: 1.2
   fullBlockChance: 0.3
