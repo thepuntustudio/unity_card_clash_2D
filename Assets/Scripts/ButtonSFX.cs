@@ -14,10 +14,15 @@ public class ButtonSFX : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
         {
             sfxSource = gm.sfxSource;
         }
-        else
+        else if (FindFirstObjectByType<SceneHandler>() != null)
         {
             SceneHandler sh = FindFirstObjectByType<SceneHandler>();
             if (sh != null) sfxSource = sh.sfxSource;
+        }
+        else
+        {
+            CharacterSelect cs = FindFirstObjectByType<CharacterSelect>();
+            if (cs != null) sfxSource = cs.sfxSource;
         }
     }
 

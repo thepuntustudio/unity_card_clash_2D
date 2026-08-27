@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2599e5f81a81b2642b0b8b2fec9ebddb
+guid: a2d9d3c7d22dde2419b8ed66c7d6a9fa
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -723663528141451876
-    second: jungle 1_0
+      213: 9024376482141665385
+    second: Male_knight_with_sword_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: jungle 1_0
+      name: Male_knight_with_sword_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 91
         y: 0
-        width: 1408
-        height: 768
+        width: 885
+        height: 900
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c9d0934fad705f5f0800000000000000
-      internalID: -723663528141451876
+      spriteID: 9687179e8960d3d70800000000000000
+      internalID: 9024376482141665385
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      jungle 1_0: -723663528141451876
+      Male_knight_with_sword_0: 9024376482141665385
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

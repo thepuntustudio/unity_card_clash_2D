@@ -495,7 +495,8 @@ public void OnEndGameChoice()
         playerHP -= damage;
         if (playerHP < 0) playerHP = 0;
         playerShield = 0;
-        SpawnParticle(fullyBlocked ? blockParticlePrefab : hitParticlePrefab, playerHitPoint);
+        bool wasBlocked = fullyBlocked || damage <= 0;
+        SpawnParticle(wasBlocked ? blockParticlePrefab : hitParticlePrefab, playerHitPoint);
         messageText.text = fullyBlocked ? "Perfect block! No damage taken!" : (damage > 0 ? $"Enemy attacks for {damage} damage!" : "Shield blocked the attack!");
         UpdateUI();
 

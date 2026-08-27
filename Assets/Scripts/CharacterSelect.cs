@@ -2,53 +2,55 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class CharacterSelect : MonoBehaviour
 {
     public TMP_InputField nameInput;
     public Sprite maleKnightSprite;
     public Sprite femaleKnightSprite;
-    public Image maleSelectHighlight;   // simple border/glow Image, toggled active
-    public Image femaleSelectHighlight;
     public Button startButton;
     public TMP_Text warningText; // "Please select a character" — hidden by default
+    public AudioSource sfxSource;  
+
+    public CharacterButtonState maleButtonState;
+    public CharacterButtonState femaleButtonState;
 
     private Sprite chosenSprite;
     private bool hasChosenCharacter = false;
 
     void Start()
+{
+    if (warningText != null) warningText.gameObject.SetActive(false);
+
+    if (GameData.Instance != null && GameData.Instance.hasSelectedCharacter)
     {
-        if (warningText != null) warningText.gameObject.SetActive(false);
+        nameInput.text = GameData.Instance.playerName;
+        chosenSprite = GameData.Instance.selectedCharacterSprite;
+        hasChosenCharacter = true;
 
-        // Pre-fill if the player already chose a character this session (e.g. came back via Back button)
-        if (GameData.Instance != null && GameData.Instance.hasSelectedCharacter)
-        {
-            nameInput.text = GameData.Instance.playerName;
-            chosenSprite = GameData.Instance.selectedCharacterSprite;
-            hasChosenCharacter = true;
-
-            // Re-show the correct highlight based on which was picked
-            bool wasFemale = GameData.Instance.isFemaleKnight;
-            maleSelectHighlight.gameObject.SetActive(!wasFemale);
-            femaleSelectHighlight.gameObject.SetActive(wasFemale);
-        }
+        bool wasFemale = GameData.Instance.isFemaleKnight;
+        maleButtonState.SetSelected(!wasFemale);
+        femaleButtonState.SetSelected(wasFemale);
     }
+}
 
     public void SelectMale()
-    {
-        chosenSprite = maleKnightSprite;
-        hasChosenCharacter = true;
-        maleSelectHighlight.gameObject.SetActive(true);
-        femaleSelectHighlight.gameObject.SetActive(false);
-    }
+{
+    chosenSprite = maleKnightSprite;
+    hasChosenCharacter = true;
+    maleButtonState.SetSelected(true);
+    femaleButtonState.SetSelected(false);
+}
 
     public void SelectFemale()
-    {
-        chosenSprite = femaleKnightSprite;
-        hasChosenCharacter = true;
-        femaleSelectHighlight.gameObject.SetActive(true);
-        maleSelectHighlight.gameObject.SetActive(false);
-    }
+{
+    chosenSprite = femaleKnightSprite;
+    hasChosenCharacter = true;
+    femaleButtonState.SetSelected(true);
+    maleButtonState.SetSelected(false);
+}
+    
 
     public void OnStartJourney()
     {
@@ -83,4 +85,10 @@ void HideWarning()
 {
     if (warningText != null) warningText.gameObject.SetActive(false);
 }
+
+public void OnBack()
+    {
+        SceneManager.LoadScene("0_MainMenu");
+    }
+
 }

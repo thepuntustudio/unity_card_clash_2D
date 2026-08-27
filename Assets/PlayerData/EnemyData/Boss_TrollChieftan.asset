@@ -17,8 +17,9 @@ MonoBehaviour:
   attackDamage: 12
   enemySprite: {fileID: -4141237505901376896, guid: 197a80fe70a004e1d99f06780fc12bbd, type: 3}
   displaySize: {x: 400, y: 400}
-  introLine: '"The ground shakes as a massive Troll Chieftain emerges, wielding a
-    boulder-sized club!"'
+  introLine: '
+
+    "Brave yourself against the boulder-sized club!"'
   isBoss: 1
   bossTelegraphChance: 0.518
   hurtSFX: {fileID: 0}

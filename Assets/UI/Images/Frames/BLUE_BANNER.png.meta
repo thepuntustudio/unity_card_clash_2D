@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2599e5f81a81b2642b0b8b2fec9ebddb
+guid: 564b7399d7a67b14d985f95eb61cbef1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -723663528141451876
-    second: jungle 1_0
+      213: 4162706270513951925
+    second: BLUE_BANNER_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: jungle 1_0
+      name: BLUE_BANNER_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1408
-        height: 768
+        width: 1536
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c9d0934fad705f5f0800000000000000
-      internalID: -723663528141451876
+      spriteID: 5b4764e4c47e4c930800000000000000
+      internalID: 4162706270513951925
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      jungle 1_0: -723663528141451876
+      BLUE_BANNER_0: 4162706270513951925
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
