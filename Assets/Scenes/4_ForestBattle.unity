@@ -735,7 +735,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278223021
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -753,15 +753,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40.8
-  m_fontSizeBase: 40.8
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -792,7 +792,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: -2.1276152}
+  m_margin: {x: 194.90894, y: 0, z: -30.037415, w: -93.154785}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -815,14 +815,14 @@ RectTransform:
   m_GameObject: {fileID: 251713533}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 203634762}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -237, y: -237}
+  m_AnchoredPosition: {x: -201, y: -265}
   m_SizeDelta: {x: 1219.51, y: 116.13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &274597160
@@ -1892,12 +1892,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -2206,7 +2206,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 250, y: 350}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &402966259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2367,7 +2367,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 250, y: 350}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &417804975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2794,9 +2794,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 781224861}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -625}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -79}
   m_SizeDelta: {x: 1000, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &615206619
@@ -4364,7 +4364,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 250, y: 350}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1388207637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6014,12 +6014,12 @@ MonoBehaviour:
   blockedImpactSFX: {fileID: 8300000, guid: 306742b1e016746768f83c5ff641d8be, type: 3}
   victorySFX: {fileID: 8300000, guid: d03a0b3bc858d456a9c386915e2a7df1, type: 3}
   defeatSFX: {fileID: 8300000, guid: 41502a717209145f5abf8df1b9d42f0c, type: 3}
-  powerStrikeSFX: {fileID: 8300000, guid: d2af4a28a729640ad8f5765f76ab345f, type: 3}
+  powerStrikeSFX: {fileID: 8300000, guid: 462e4893472cfbf42a9d9918d2f430cd, type: 3}
   enemyAppearSFX: {fileID: 8300000, guid: 2c2e5a27622034095bddc1210315f141, type: 3}
   enemyDeathSFX: {fileID: 8300000, guid: 763abf20732fb476cb53763a193ad4f3, type: 3}
   telegraphChance: 0.25
   telegraphDamageMultiplier: 1.8
-  telegraphSFX: {fileID: 0}
+  telegraphSFX: {fileID: 8300000, guid: 24625c18bacb55148b59abba15c9dade, type: 3}
   resultCinematicPanel: {fileID: 203634761}
   resultCinematicImage: {fileID: 917722493}
   resultCinematicText: {fileID: 251713534}
@@ -6303,8 +6303,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015259, y: -44}
-  m_SizeDelta: {x: 133.11, y: 119.14}
+  m_AnchoredPosition: {x: 5.6, y: -42.28}
+  m_SizeDelta: {x: 129.42, y: 118.16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1806185349
 MonoBehaviour:

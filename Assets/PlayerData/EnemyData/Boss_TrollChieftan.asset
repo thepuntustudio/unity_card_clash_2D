@@ -23,5 +23,5 @@ MonoBehaviour:
   isBoss: 1
   bossTelegraphChance: 0.518
   hurtSFX: {fileID: 0}
-  deathSFX: {fileID: 0}
-  appearSFX: {fileID: 0}
+  deathSFX: {fileID: 8300000, guid: f10d8eb86976fc046bf090f535a2b677, type: 3}
+  appearSFX: {fileID: 8300000, guid: 4cafdcf8902969d43aa0b27334cea16c, type: 3}

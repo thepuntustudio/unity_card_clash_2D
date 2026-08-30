@@ -18,3 +18,8 @@ MonoBehaviour:
   enemySprite: {fileID: 8749302817991680212, guid: 5ce894478b34644b1b60c9f8962583a0, type: 3}
   displaySize: {x: 323, y: 255}
   introLine: '"A goblin scout blocks your path!"'
+  isBoss: 0
+  bossTelegraphChance: 0.4
+  hurtSFX: {fileID: 0}
+  deathSFX: {fileID: 8300000, guid: eb9a615d55339c547879c2081408ddc4, type: 3}
+  appearSFX: {fileID: 0}
